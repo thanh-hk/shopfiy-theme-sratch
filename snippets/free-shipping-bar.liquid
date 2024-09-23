@@ -1,0 +1,16 @@
+{% assign shipping_value = settings.free_shipping_amounts | plus:0 | times: 100%}
+{% assign cart_total = cart.total_price %}
+{% assign shipping_value-left = shipping_value | minus: cart_total %}
+{% assign shipping_value-left_money = shipping_value-left | money %}
+{% assign shipping_percetage_fraction = cart_total | times: 100 | divided_by: shipping_value  %}
+<div class="w-full {% if  template == 'cart' %} md:w-[500px] {% endif %}flex flex-col gap-5 mb-5 items-center">
+        {% if shipping_value-left > 0%}       
+            <div >{{- 'cart.general.shipping_value_left_first' | t}} <span class='shipping_value-left'>{{ shipping_value-left | money }}</span> {{- 'cart.general.shipping_value_left_last' | t}}</div>
+        {% elsif shipping_value-left <= 0 %}
+            <span>{{- 'cart.general.free_shipping' | t }}</span>
+        {% endif %}
+  
+    <div class="free-shipping-bar w-full relative h-2 overflow-hidden rounded-md bg-[--light-gray--color]" data-freeshipping-amount = '{{ settings.free_shipping_amounts }}'> 
+        <span class="bar absolute top-0 left-0 bottom-0 transition-all rounded-md bg-[--primary-color]" style="width:{{ shipping_percetage_fraction}}%;"></span>
+    </div>
+</div>

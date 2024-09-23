@@ -1,0 +1,18 @@
+<div class="section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+    <div class="container  mx-auto px-4 ">
+        <h1> {{ page.title }} </h1>
+        <div> {{ page.content }}</div>
+    </div>
+</div>
+    {%  schema  %}
+        {
+          "name":"Page",
+          "class": "section-page", 
+          
+          "presets": [
+            {
+              "name":"Page"
+            }
+          ]
+      }
+      {%  endschema  %}

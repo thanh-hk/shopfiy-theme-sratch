@@ -1,0 +1,9 @@
+<select name="id" class=" {% if product.has_only_default_variant %} opacity-0{% endif %} border border-[--border-color]  p-4">                   
+    {% for variant in product.variants %}
+        {% if variant.available %}
+            <option value="{{ variant.id }}">{{ variant.title }} </option> 
+        {% else %}
+            <option value="{{ variant.id }}">{{ variant.title }}</option>  
+        {% endif %}
+    {% endfor %} 
+</select>  

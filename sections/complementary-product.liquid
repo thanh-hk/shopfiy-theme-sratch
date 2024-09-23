@@ -1,0 +1,89 @@
+
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+  <div class="container gap-4 mx-auto px-4" >
+          <div class="flex flex-col items-center">
+              <h2 class="font-medium uppercase pb-6"> {{ 'products.product.related_product' | t }}</h2>
+              <div class="related-products grid-cols-2 grid md:grid-cols-6 gap-6"></div>
+          </div>
+  </div>
+</div>
+
+{%  assign relatedID = product.id %}
+{%  schema  %}
+  {
+    "name":"Complementary product",
+    "class": "section-complementary ", 
+    "enabled_on": {
+      "templates": [
+      "product"
+      ]
+    },
+    "settings": [
+      {
+        "type": "checkbox",
+        "id":"show_border_top",
+        "label": "Show border top",
+        "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name":"Complementary product"
+      }
+    ]
+  }
+{%  endschema  %}
+
+<script>
+  function buildBlock(product){ 
+        const formattedPrice = formatMoney(product.price, "{{ shop.money_format }}")
+        const html = `
+        <div>
+        <a class="related-product flex flex-col" href="${product.url}">
+         <img src="${product.images[0]}">
+         <h3 class="mt-3 text-sm">${product.title}</h3>
+         <span>${formattedPrice}</span>
+        </a>
+        <form method="post" action="/cart/add">
+        <input id="product-id" type="hidden" name="id" value="${product.variants[0].id}"> 
+        <button type="submit" name="add to cart" class="w-full p-2 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3" id="add-to-cart">Add to cart</button>
+        </form>
+        </div
+        `
+        return html
+  }
+
+  fetch(window.Shopify.routes.root + "recommendations/products.json?product_id={{ relatedID }}&limit=6")
+    .then(response => response.json())
+    .then(({ products }) => {
+      console.log(products);
+      products.forEach(product => {
+          const html = buildBlock(product);
+          document.querySelector('.related-products').innerHTML += html;
+  });
+    
+  document.querySelectorAll('form[action="/cart/add"').forEach(form =>{
+  form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      //submit with ajax
+      await fetch('/cart/add.js', {
+      method:"post",
+      body: new FormData(form)
+      });
+
+      const res = await fetch('/cart.js');
+      const cart = await res.json();
+      console.log(cart);
+      
+      //open cart drawer
+
+      await updateCartDrawer();
+      updateCartCountItem(cart.item_count);
+      openDrawer();
+  })
+  });
+
+}
+);
+
+</script>

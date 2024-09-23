@@ -1,0 +1,19 @@
+{% if product.variants.size > 1 %}
+    <div class="product-option">
+        {% for option in product.options_with_values %}
+            <fieldset class="mb-5">
+                <legend class="mb-3">{{ option.name }}</legend>
+                {% for value in option.values %}
+                    <input 
+                        {% if option.selected_value == value %}checked {% endif %}
+                        type="radio" 
+                        name="{{ option.name }}" 
+                        value="{{ value }}"
+                        id="{{ option.name |  handleize }} - {{ value |  handleize }}"
+                        class="{% unless value.available %} disable{% endunless %} hidden "> 
+                    <label class="cursor-pointer mr-3 py-2 px-5 text-center border border-[--border-color] rounded-[--border-radius]" for ="{{ option.name |  handleize }} - {{ value |  handleize }}">{{ value }}</label>
+                {% endfor %}
+            </fieldset>
+            {% endfor %}
+    </div>
+{% endif %}

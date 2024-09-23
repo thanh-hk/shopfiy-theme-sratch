@@ -1,0 +1,69 @@
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
+    <div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2">
+        <div class="col-span-1 flex items-center mb-7">
+            <div class="pr-6">
+                {{ section.settings.text_left }}
+            </div>
+        </div>
+        <div class="col-span-1">
+            <div class="flex flex-col gap-3">
+                {% for block in section.blocks %}
+                     <div class="button-dynamic cursor-pointer py-5 px-6 flex items-center justify-between bg-[--border-color] rounded-[--border-radius]" data-section-name="{{ block.settings.section_name }}">
+                       <span>{{ block.settings.title }}</span> 
+                       {%  render 'icon' with 'chevron-right' %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+ {%  schema  %}
+    {
+      "name":"Dynamic buttons",
+      "class": "section-main-collection", 
+      "enabled_on": {
+        "templates": [
+        "product"
+        ]
+      },
+     
+      "settings": [
+        {
+              "type": "checkbox",
+              "id":"show_border_top",
+              "label": "Show border top",
+              "default": true
+            },
+        {
+            "type": "richtext",
+            "id": "text_left",
+            "label": "Text left"
+        }
+    ],
+    "blocks": [
+     {
+        "type": "button",
+                "name": "Button",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "section_name",
+                        "label": "Section name"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title"
+                    }
+                ]
+     }
+    ],
+   
+  "presets": [
+        {
+            "name":"Dynamic buttons"
+        }
+ ]
+}
+{%  endschema  %}

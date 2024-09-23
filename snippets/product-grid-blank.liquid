@@ -1,0 +1,22 @@
+
+    <div class="flex flex-col gap-2">
+        <div class="bg-[#f5f5f5] h-full">       
+            {{- 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}       
+        </div>
+        <div class="text-[--border-color] text-sm">{{ 'products.product_blank.vendor' | t}}</div>   
+        <div class="hover:underline">{{ 'products.product_blank.title' | t}}</div>
+        <div class=" flex gap-4 items-center"> 
+                <span>{{ 'products.product_blank.price' | t}}</span> 
+                <span class="product-compare-price text-[--border-color] text-sm line-through">{{ 'products.product_blank.price' | t}}</span>                                    
+        </div>
+        <button  
+            class="w-full p-2 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3" >{{- 'products.product.add_to_cart' | t -}}
+        </button> 
+    </div>    
+
+
+
+            
+           
+       
+   

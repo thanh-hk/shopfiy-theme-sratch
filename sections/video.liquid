@@ -1,0 +1,37 @@
+<div class="section-id-{{ section.id }}">
+    {%  assign  link =  section.settings.video_external |  split: '=' | last%} 
+    <iframe width="100%" height="600" class="hidden md:block"
+    src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+    </iframe> 
+    <iframe width="100%" height="300" class="md:hidden"
+    src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+    </iframe> 
+
+   
+</div>
+
+{%  schema  %}
+    {
+      "name":"Video",
+      "class": "section-video", 
+      "settings": [
+        {
+            "id": "video_external",
+            "type": "text",
+            "label": "External video",
+            "info": "Supports YouTube and Vimeo. Landscape videos with a 16:9 aspect ratio recommended."
+
+        }
+      ]
+    ,
+      "presets": [
+        {
+            "name":"Video"
+            }]
+}
+{%  endschema  %}
+<script>
+ 
+
+
+</script>

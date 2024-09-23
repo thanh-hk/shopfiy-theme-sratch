@@ -1,0 +1,66 @@
+
+{%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' -%}
+{%- assign t = template | split: '.' | first -%}
+<div class="section-id-{{ section.id }}">
+    <div class="container mx-auto p-4 pb-0">
+        <nav class="text-xs flex gap-2 items-center" role="navigation" aria-label="breadcrumbs">
+            <a href="/">Home</a>
+            {%- case t -%}
+                {%- when 'page' -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    <a href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+
+                {%- when 'product' -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    {% for collection in product.collections %}
+                        {{ collection.title | link_to: collection.url }}
+                    {% endfor %}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    <a class="underline" href="{{ product.url }}" aria-current="page">{{ product.title }}</a> 
+
+                {%- when 'collection' and collection.handle -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    {%- if current_tags -%}
+                        {{ collection.title | link_to: collection.url }}
+                        {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+                        <a href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + "}}</a>
+                    {%- else -%}
+                        <a  href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
+                    {%- endif -%}
+
+                {%- when 'blog' -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    {%- if current_tags -%}
+                        {{ blog.title | link_to: blog.url }}
+                        {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+                        <a class="breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
+                    {%- else -%}
+                        <a class="breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+                    {%- endif -%}
+
+                {%- when 'article' -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    {{ blog.title | link_to: blog.url }}
+                    <a  href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
+
+                {%- else -%}
+                    {% render 'icon' with 'chevron-right', width: 7, height: 7 %}
+                    <a class="breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
+            {% endcase %}       
+        </nav>
+    </div>
+</div>
+{%- endunless -%}
+
+{%  schema  %}  
+    {
+        "name" :"Breadcrum",
+        "class" :"section-breadcrum ",
+        "settings": [],
+        "presets": [
+            {
+                "name":"Breadcrum"
+            }
+        ]
+    }
+{%  endschema  %}  

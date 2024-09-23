@@ -1,0 +1,149 @@
+
+{%  style  %}
+
+{% endstyle %} 
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
+    <div class="container px-4 mx-auto flex flex-col gap-8">
+        {% for block in section.blocks %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 min-h-[500px] md:min-h-[300px]">
+                {% if block.settings.image_position == 'left' %}
+                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max">
+                        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                        {% if block.settings.image == blank %}
+                            <div class="bg-[#f5f5f5] h-full">
+                                {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
+                            </div>
+                        {% else %}  
+                            <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                        {% endif %} 
+                        </div>                    
+                    </div>
+                {% else %}
+                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max md:hidden">
+                        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                        {% if block.settings.image == blank %}
+                            <div class="bg-[#f5f5f5] h-full">
+                                {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
+                            </div>
+                        {% else %}  
+                            <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                        {% endif %} 
+                        </div>                    
+                    </div>
+                {% endif %}               
+                <div class="grid-cols-1 flex flex-col gap-4 justify-center">
+                    <h2 class="font-medium">{{ block.settings.title  }}</h2>
+                    <div> {{ block.settings.text}}</div>
+                    {% if  block.settings.link_name %}
+                        <div class="flex">
+                            <a href="{{ block.settings.link }}" class="py-2 px-5 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color]">{{  block.settings.link_name }}</a>
+                        </div>
+                    {% endif %} 
+                </div>
+                {% if block.settings.image_position == 'right' %}
+                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max hidden md:block">
+                        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                        {% if block.settings.image == blank %}
+                            <div class="bg-[#f5f5f5] h-full">
+                                {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}
+                            </div>
+                        {% else %}  
+                        <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                        {% endif %} 
+                        </div>                    
+                    </div>
+                {% endif %}  
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{%  schema  %}  
+    {
+        "name" :"Image with text",
+        "class" :"section-image-text",
+        "settings": [
+            {
+                "type": "checkbox",
+                "id": "show_border_top",
+                "label": "Show border top"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "block",
+                "name": "Block",
+                "settings": [
+                    {
+                        "type": "select",
+                        "id": "image_position",
+                        "label": "Image position",
+                        "options": [
+                            {
+                                "label": "Left",
+                                "value": "left"
+                            },
+                            {
+                                "label": "Right",
+                                "value": "right"
+                            }                       
+                        ],
+                        "default": "left"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id":"image",
+                        "label":"Block image"
+ 
+                    },
+                    {
+                        "type": "text",
+                        "id":"title",
+                        "label":"Heading",
+                        "default" :"Block heading"
+                    },
+                    {
+                        "type": "richtext",
+                        "id":"text",
+                        "label":"Text",
+                        "default" :"<p>You can add a maximum of 250 images, 3D models, or videos to a product. 3D models and videos have specific hosting limits based on your Shopify plan.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "id":"link_name",
+                        "label":"Link name",
+                        "default" :"Read more"
+                    },
+                    {
+                        "type": "url",
+                        "id":"link",
+                        "label":"Link"
+
+                    }
+
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name":"Image with text",
+                "blocks": [
+                {
+                    "type": "block",
+                    "settings": {
+                        "image_position": "left"                  
+                    }
+                             
+                },
+                {
+                    "type": "block",
+                    "settings": {
+                        "image_position": "right"                
+                    }
+              
+                }
+               
+            ]
+            }
+        ]
+}
+{%  endschema  %}  

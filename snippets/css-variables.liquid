@@ -1,0 +1,54 @@
+{%- comment -%}
+This file defines all the CSS variables used throughout the theme. Feel free to adjust them at your own need, but
+note that this may have impact on different places.
+{%- endcomment -%}
+
+{%- capture direction -%}{% render 'direction' %}{%- endcapture -%}
+
+   <style>
+       
+     :root {
+      /* Font properties */
+   
+    --text-font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};
+    --text-font-weight: {{ settings.text_font.weight }};
+    --text-font-style: {{ settings.text_font.style }};
+    --text-font-desktop-size: {{ settings.text_font_size_desktop }}px;
+    --text-font-mobile-size: {{ settings.text_font_size_mobile }}px;
+    --heading-font-size: {{ settings.heading_font_size }}px;
+    --sub-heading-font-size: {{ settings.sub_heading_font_size }}px;
+
+
+     /**
+        * ---------------------------------------------------------------------
+        * GENERAL
+        * ---------------------------------------------------------------------
+        */
+        --section-top_bottom_padding: {{ settings.top_bottom_padding }}px;
+        --border-overlay_radius:{{ settings.border-overlay_radius }}px;
+
+       /**
+        * ---------------------------------------------------------------------
+        * COLORS
+        * ---------------------------------------------------------------------
+        */
+       --primary-color: {{ settings.primary_color }};
+       --border-color: {{ settings.border_color }};
+       --light-gray--color: {{ settings.light_gray_color }};
+       --sale-label-bg:{{ settings.sale_label_bg }};
+       --sale-label-text:{{ settings.sale_label_text }};
+       --link-hover-color: {{ settings.link_hover_color }};
+       --text_on_ovelay: {{ settings.text_on_ovelay }};
+      /**
+        * ---------------------------------------------------------------------
+        * BUTTON
+        * ---------------------------------------------------------------------
+        */
+       --border-radius : {{ settings.border_radius }}px;
+      
+       
+     }
+
+    
+
+   </style>

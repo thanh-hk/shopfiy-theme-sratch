@@ -1,0 +1,302 @@
+{%  style  %}
+    .section-id-{{ section.id }} .slide-show, .section-id-{{ section.id }} .slide-shows {    
+    --slideshow_mobile_high: {{ section.settings.slideshow_mobile_high }}px;
+    --slideshow_desktop_high: {{ section.settings.slideshow_desktop_high }}px;
+    }
+{% endstyle %}
+<div class="section-id-{{ section.id }}">
+    <div class="slide-shows overflow-auto max-w-[200rem] h-[--slideshow_mobile_high] md:h-[--slideshow_desktop_high] relative md:overflow-hidden scroll-smooth">
+        {% for block in section.blocks %}              
+            <div class="slide-show absolute top-0 w-[100%] transition-all pr-3  h-[--slideshow_mobile_high] md:h-[--slideshow_desktop_high]" {{ block.shopify_attributes }}>
+        
+            <div class="absolute top-0 left-0 w-full h-full {% if section.settings.show_over_lay %}before:absolute  before:w-full before:h-full before:bg-black before:bottom-0 before:left-0 before:right-0 before:top-0 before:opacity-30{% endif %}">
+                {% if block.settings.image == blank %}
+                    <div class="bg-[#f5f5f5] h-full">
+                        {%- capture current %}{% cycle 1, 2 %}{% endcapture -%}
+                    {{- 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
+                    </div>
+                {% else %}  
+                    <img src="{{ block.settings.image |  image_url }}"  class="object-cover object-center w-full h-full hidden md:block" >
+                    <img src="{{ block.settings.image_mobile |  image_url }}"  class="object-cover object-center w-full h-full md:hidden" >
+                {% endif %}
+            </div>
+            <div class="absolute top-0 left-0 w-full h-full">
+                <div class="container z-3 h-full mx-auto px-4  text-[--text_on_ovelay] absolute top-0 left-[50%] -translate-x-[50%] flex items-{{ section.settings.layout_align_vertical }} justify-{{ section.settings.layout_align_horizontal }}">           
+                    <div class="text-{{ section.settings.text_align}} max-w-[400px]">                    
+                        {% if block.settings.title != blank %}
+                            <h1 class="uppercase">{{ block.settings.title }}</h1>
+                        {% endif %}
+                        {% if block.settings.text != blank %}
+                            <div>{{ block.settings.text }}</div>
+                        {% endif %}
+                        {% if block.settings.link_name != blank %}
+                            <div class="flex {% if section.settings.text_align == 'right' %} justify-end  {% else %} justify-{{ section.settings.text_align}} {% endif %}">
+                                <a href="{{ block.settings.link }}" class="py-2 px-4 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3"> {{ block.settings.link_name }}</a>
+                            </div>                                           
+                        {% endif %}  
+                        </div>         
+                </div>
+            </div>
+              
+            </div>
+        {% endfor %}
+    <div class="container mx-auto p-4 flex justify-between items-center absolute bottom-0 left-[50%] -translate-x-[50%]">
+        <div class="dots w-[100px] h-[10px] flex gap-3"></div>
+        <div class="gap-4 justify-end mb-5 hidden md:flex">
+            <button class="slider__btn--left cursor-pointer w-10 h-10 flex justify-center items-center border-2 rounded-full border-[--border-color] ">{%- render 'icon' with 'chevron-left-white' -%}</button> 
+            <button class="slider__btn--right cursor-pointer w-10 h-10 flex justify-center items-center border-2 rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-right-white' -%}</button>
+        </div>   
+    </div> 
+    </div>
+</div>
+{%  schema  %}  
+{
+    "name" :"Slideshow",
+    "class" :"section-slideshow",
+    "settings": [
+        {
+                "type": "range",
+                "id": "slideshow_mobile_high",
+                "min": 250,
+                "max": 500,
+                "step": 10,
+                "unit": "px",
+                "label": "Mobile image row heights",
+                "default": 250   
+            },
+            {
+                "type": "range",
+                "id": "slideshow_desktop_high",
+                "min": 400,
+                "max": 600,
+                "step": 10,
+                "unit": "px",
+                "label": "Desktop image row heights",
+                "default": 400  
+            },
+        {  
+             "type":"checkbox",
+            "id":"show_over_lay",
+            "label": "Show overlay",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Content display"
+        },
+        {
+            "type": "select",
+            "id": "layout_align_horizontal",
+            "label": "Horizontal Layout",
+            "options": [
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Right",
+                    "value": "end"
+                },
+                {
+                    "label": "Left",
+                    "value": "start"
+                }                           
+            ],
+            "default": "start"
+        },
+        {
+            "type": "select",
+            "id": "layout_align_vertical",
+            "label": "Vertical Layout",
+            "options": [
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Bottom",
+                    "value": "end"
+                },
+                {
+                "label": "Top",
+                "value": "start"
+                }                           
+            ],
+            "default": "center"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "options": [
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                "label": "Left",
+                "value": "left"
+                }                           
+            ],
+            "default": "left"
+        },
+        {
+          "type":"range",
+          "id": "delay_time",
+          "min" : 2,
+          "max" : 7,
+          "step": 1,
+          "unit": "s",
+          "label":"Change slides every",
+          "default": 3
+        }
+    ],
+    "blocks": [
+        {
+            "type": "slide",
+            "name": "Slide",
+            "settings": [
+                
+                {
+                    "type" :"image_picker",
+                    "id":"image",
+                    "label": "Desktop Image"
+                },
+                {
+                    "type" :"image_picker",
+                    "id":"image_mobile",
+                    "label": "Mobile Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Best Collection for Home Decoration"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam accusantium perspiciatis, sapiente magni eos dolorum ex quos dolores odio</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "link_name",
+                    "label": "Link name",
+                    "default": "Shop now"
+                },       
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link"
+                }
+            ]
+    }
+],
+    "presets": [
+        {
+            "name":"Slideshow",
+            "settings": {
+                "delay_time":3,
+                "slideshow_desktop_high": 450,
+                "slideshow_mobile_high":400
+
+            },
+           
+            "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+       
+      ]
+        }
+    ]
+}
+{%  endschema  %}
+
+<script>  
+    const slideshows = document.querySelectorAll('.slide-show');
+    const btnLeft = document.querySelector('.slide-shows .slider__btn--left');
+    const btnRight = document.querySelector('.slide-shows .slider__btn--right');
+    const dotContainer = document.querySelector('.dots');
+    const time = '{{ section.settings.delay_time | times :1000}}';
+    let curSlide = 0;
+    const maxSlide = slideshows.length;
+
+    const createDots = function () {
+        slideshows.forEach(function (_, i) {
+        dotContainer.insertAdjacentHTML(
+            'beforeend',
+            `<button class="dots__dot w-3 h-3 rounded-full cursor-pointer transition bg-[#d1d5db] opacity-50" data-slide="${i}"></button>`
+        );
+        });
+    };
+
+    const activateDot = function (slide) { 
+        document
+        .querySelectorAll('.dots__dot')
+        .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+        document
+        .querySelector(`.dots__dot[data-slide="${slide}"]`)
+        .classList.add('dots__dot--active');
+    };
+
+    const goToSlide = function(slide){
+        slideshows.forEach((s,i)=> {
+            s.style.transform = `translateX(${100 * (i - curSlide)}%)`;     
+        });
+    }
+
+    setInterval(function(){
+        if ( curSlide === maxSlide - 1){
+            curSlide = 0;
+        }else{
+            curSlide++;
+        }
+        
+        goToSlide(curSlide);
+    
+
+    },time);
+
+    const nextSlide = function(){
+        if ( curSlide === maxSlide - 1){
+            curSlide = 0;
+        }else{
+            curSlide++;
+        }
+        
+        goToSlide(curSlide);
+        activateDot(curSlide);
+    };
+
+    const prevSlide = function(){
+        if(curSlide === 0) {
+            curSlide = maxSlide - 1;
+        } else {
+            curSlide--;
+        }
+    
+        goToSlide(curSlide);
+        activateDot(curSlide);
+    }
+
+    const init = function () {
+        goToSlide(0);
+        createDots();
+        activateDot(0);
+    };
+    init();
+
+    btnRight.addEventListener('click', nextSlide)
+    btnLeft.addEventListener('click', prevSlide)
+</script>
+

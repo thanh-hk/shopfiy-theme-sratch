@@ -1,0 +1,28 @@
+<div class="section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+  <div class="container gap-4 mx-auto p-4 grid md:grid-cols-2 grid-cols-1" >
+      <div class=" px-4 pt-3 col-span-1 hidden md:block">
+        <img src="{{ section.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full" >
+      </div>
+      <div class=" px-4 pt-3 flex-grow col-span-1 ">
+        {%  render 'contact' %}
+      </div>
+  </div>
+</div>
+{%  schema  %}
+  {
+    "name":"Contact",
+    "class": "section-contact ", 
+    "settings": [
+      {
+        "type": "image_picker",
+        "id":"image",
+        "label": "Left image"
+      }
+    ],
+    "presets": [
+      {
+        "name":"Contact"
+      }
+    ]
+}
+{%  endschema  %}

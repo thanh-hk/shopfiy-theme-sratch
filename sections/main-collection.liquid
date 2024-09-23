@@ -1,0 +1,146 @@
+
+
+  <div class="container gap-4 mx-auto px-4 pb-6 pt-4" data-money-format="{{ shop.money_format }}">
+    <div class="flex gap-4 text-sm mb-4">
+      <div class="w-full justify-between md:justify-end flex items-center"> 
+        <div class="md:hidden z-20">
+          <div class="filter-button-mobile cursor-pointer flex items-center gap-2"><span class="w-7">{%- render 'icon' with 'filter' -%}</span>{{- 'products.facets.label' | t  -}}</div>
+          <div class="filter-mobile z-20 flex flex-col fixed left-0 top-0 h-full overflow-auto max-w-[300px] p-4 w-5/6  bg-white -translate-x-[100%] duration-300 md:static md:w-full md:flex-row md:max-w-full 
+          md:translate-x-0 md:overflow-initial md:justify-end md:items-center">
+          {%  render 'filter' %} 
+            <div class="flex gap-3 items-center mt-5">
+              <span>{{- 'products.facets.label_sortby' | t  -}}</span>
+              <select id="sort-by" class="border-b border-[--border-color] py-1 pr-4 grow">
+                {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+                {% for option in collection.sort_options %}
+                  <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
+                    {{ option.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="filter-mobile-overlay w-full h-full fixed top-0 -left-[100%]  bg-gray-900/75 opacity-0 -translate-x-[100%] duration-300 "></div>
+        </div>
+        <div class="flex gap-3 items-center">
+          <span>{{- 'products.facets.label_sortby' | t  -}}</span>
+          <select id="sort-by" class="border-b border-[--border-color] py-1 pr-4 mr-4 hidden md:block">
+            {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+            {% for option in collection.sort_options %}
+              <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>
+                {{ option.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <span>{{ collection.all_products_count }} products</span>
+        </div>     
+      </div> 
+  </div>
+{% if section.settings.filter_type == 'horizontal' %}   
+  {%  render 'filter-horizontal' %}     
+{% endif %}    
+{%  assign  products-per-page = section.settings.products_per_page %} 
+{% paginate collection.products by products-per-page %}
+{% if section.settings.filter_type == 'vertical' %}<div class="grid md:grid-cols-4 gap-6 "> {% endif %}
+  {% if section.settings.filter_type == 'vertical' %}
+    <div class="col-span-1 hidden md:block">
+    {%  render 'filter' %} 
+    </div>
+  {% endif %}
+{% if section.settings.filter_type == 'vertical' %}<div class="col-span-3">{% endif %}
+    <div class="grid grid-cols-2  md:grid-cols-{{ section.settings.items_per_row }} gap-6">    
+      {% for product in collection.products %}
+            {%  render 'product-grid', product: product %}   
+      {% endfor %}
+    </div>
+{% if section.settings.filter_type == 'vertical' %}</div>{% endif %} 
+  {% if section.settings.filter_type == 'vertical' %}</div> {% endif %}
+    <div class="flex justify-center text-sm gap-5 mt-6">{{ paginate | default_pagination }}</div>  
+{% endpaginate %}
+</div>
+
+{%  schema  %}
+    {
+      "name":"Collection page",
+      "class": "section-main-collection", 
+      "settings": [
+        {
+          "type":"select",
+          "id": "filter_type",
+          "label":"Filter format",
+          "options": [
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            },
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            }
+          ],
+          "default": "vertical"
+        },
+        {
+          "type":"range",
+          "id": "products_per_page",
+          "min" : 6,
+          "max" : 20,
+          "step": 1,
+          "label":"Products per page",
+          "default": 10
+        },
+        {
+          "type":"range",
+          "id": "items_per_row",
+          "min" : 3,
+          "max" : 5,
+          "step": 1,
+          "label":"Items per row on desktop",
+          "default": 3
+        },
+        {
+          "type": "checkbox",
+          "id":"show-quick-buy",
+          "label": "Show quick buy",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id":"show-second-image",
+          "label": "Show second image on hover",
+          "default": true,
+          "info": "Only work with product that has more than 2 images"
+        }
+      ]
+    } 
+    {% endschema %} 
+      {%  style  %}
+        :root {    
+          --items-per-row: {{ section.settings.items_per_row }};
+        }
+   {% endstyle %}  
+
+<script>
+  // sorting
+Shopify.queryParams = {};
+// Preserve existing query parameters
+if (location.search.length) {
+  var params = location.search.substr(1).split('&');
+  for (var i = 0; i < params.length; i++) {
+    var keyValue = params[i].split('=');
+    if (keyValue.length) {
+      Shopify.queryParams[decodeURIComponent(keyValue[0])] = decodeURIComponent(keyValue[1]);
+    }
+  }
+}
+// Update sort_by query parameter on select change
+document.querySelector('#sort-by').addEventListener('change', function(e) {
+  var value = e.target.value;
+  Shopify.queryParams.sort_by = value;
+  location.search = new URLSearchParams(Shopify.queryParams).toString();
+});
+
+
+
+</script>
+{{ 'variant-select.js' |  asset_url |  script_tag }}

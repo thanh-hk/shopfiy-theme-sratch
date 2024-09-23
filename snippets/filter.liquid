@@ -1,0 +1,197 @@
+
+<form class="text-sm border-b border-[--border-color]">
+  <div class="flex flex-col">
+    <div class="flex justify-end"> <span class="md:hidden close-button cursor-pointer transition hover:rotate-45 pb-4">{%- render 'icon' with 'close' -%} </span></div>
+  <div class="flex justify-between mb-3 group">
+    <h2>{{- 'products.facets.label' | t  -}}</h2>
+    <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="underline group-only:hidden">{{- 'products.facets.remove_all' | t  -}}</a>
+  </div> 
+   
+    {%- for filter in collection.filters -%}
+      {%- if filter.type == "price_range" -%}
+        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%} 
+          <div class="flex">
+            <a href="{{ filter.url_to_remove }}" class="py-1 px-4 border border-[--border-color] rounded-[--border-radius]">
+              {%- assign min_value = filter.min_value.value | default: 0 -%}
+              {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+              {{ min_value | money }} - {{ max_value | money }} X
+            </a> 
+          </div>        
+                    
+        {%- endif -%}
+      {%- else -%}
+        {%- for filter_value in filter.active_values -%}
+          <div class="flex mb-3">
+            <a href="{{ filter_value.url_to_remove }}" class="py-1 px-4 border border-[--border-color] rounded-[--border-radius]">
+              {{ filter.label }}: {{ filter_value.label }} X
+            </a>
+          </div>           
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    </div>
+
+  {%- for filter in collection.filters -%}
+    <details class="cursor-pointer transition">
+      <summary class="py-3 border-t border-[--border-color]">
+        <div class="flex justify-between items-center">
+          <div class="flex">
+              <span>{{ filter.label }}</span> 
+              {%- if filter.active_values.size > 0 -%}
+                <span> ({{ filter.active_values.size }})</span>
+              {%- endif -%}
+          </div>
+          {%- render 'icon' with 'chevron-bottom' -%}  
+            
+        </div>
+      </summary>
+
+      <div>
+        {%- case filter.type -%}
+          {%- when 'boolean' -%}
+            <ul>
+                <li class="py-1">
+                  <label for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}" class="flex gap-1 facet-checkbox">
+                  <input type="checkbox"
+                    name="{{ filter.param_name }}"
+                    value="{{ filter.true_value.value }}"
+                    id="Filter-{{ filter.param_name }}"
+                    {% if filter.true_value.active -%}checked{%- endif %}
+                    {% if filter.true_value.count == 0 and filter.true_value.active == false -%}disabled{%- endif -%}
+                    onChange="this.form.submit()"
+                    class="hidden" 
+                  >
+                  <span class="flex w-4 h-4 p-[2px] justify-center items-center border border-[--border-color]">
+                    {%  render 'icon' with 'checkmark' %} 
+                  </span>
+                  {{ filter.true_value.label }}</label>
+                </li>
+                <li class="py-1">
+                  <label for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}">
+                  <input type="checkbox"
+                    name="{{ filter.param_name }}"
+                    value="{{ filter.false_value.value }}"
+                    id="Filter-{{ filter.param_name }}"
+                    {% if filter.false_value.active -%}checked{%- endif %}
+                    {% if filter.false_value.count == 0 and filter.false_value.active == false -%}disabled{%- endif %}
+                    onChange="this.form.submit()"
+                    class="hidden" 
+                  >
+                  <span class="flex w-4 h-4 p-[2px] justify-center items-center border border-[--border-color]">
+                    {%  render 'icon' with 'checkmark' %} 
+                  </span>
+                  {{ filter.false_value.label }}</label>
+                </li>
+            </ul>
+
+            
+          {%- when 'list' -%}
+            <ul>
+              {%- for filter_value in filter.values -%}
+                <li class="py-1 last:mb-2">
+                  <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="flex gap-1 facet-checkbox">
+                  <input type="checkbox" 
+                    name="{{ filter_value.param_name }}"
+                    value="{{ filter_value.value }}"
+                    id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                    {% if filter_value.active -%}checked{%- endif %}
+                    {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                    onChange="this.form.submit()" 
+                    class="hidden"                    
+                  >
+                  <span class="flex w-4 h-4 p-[2px] justify-center items-center border border-[--border-color]">
+                    {%  render 'icon' with 'checkmark' %} 
+                  </span>
+                  
+                                
+                    <span>
+                      {%- case filter_value.display.type -%}
+                        {%- when 'colors' -%}
+                          {% liquid
+                            assign size_limit = filter_value.display.value.size | at_most: 4
+                            assign rotation = '0deg'
+                            if size_limit == 2
+                              assign rotation = '45deg'
+                            endif
+
+                            assign angle_increment = 360 | divided_by: size_limit
+                            assign angle = 0
+                          %}
+                          {%- capture conic_gradient -%}
+                            {%- for color in filter_value.display.value limit: size_limit -%}
+                              {{ color }} {{ angle }}deg{%- assign angle = angle | plus: angle_increment %} {{ angle }}deg{%- unless forloop.last %}, {%- endunless -%}
+                            {%- endfor -%}
+                          {%- endcapture -%}
+                          <span style="
+                            width: 25px;
+                            height: 25px;
+                            border-radius: 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background: conic-gradient({{ conic_gradient }}); transform: rotateZ({{ rotation }});
+                          "></span>
+                        {%- when 'image' -%}
+                          {{
+                            filter_value.display.value
+                            | image_url: width: 25
+                            | image_tag: alt: filter_value.display.value.alt
+                          }}
+                        {%- else -%}
+                          <span class="visual-display__child"></span>
+                      {%- endcase -%}
+                    </span>
+                    {{ filter_value.label }}  ({{- filter_value.count -}})
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+
+          {%- when 'price_range' -%}
+            {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+            <div class="filter-group-display__price-range pb-4">
+              <div class="mb-2">{{- 'products.facets.max_price' | t: price: max_price_amount -}}</div>
+              <div class="flex justify-between">
+                <div class="flex flex-col basis-[47%]">
+                  <label for="Filter-{{ filter.min_value.param_name }}">From</label>
+                  <div class="flex items-center border border-[--border-color] pl-2">
+                    <span>{{ cart.currency.symbol }}</span>
+                    <input name="{{ filter.min_value.param_name }}"
+                      id="Filter-{{ filter.min_value.param_name }}"
+                      {% if filter.min_value.value -%}
+                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" 
+                      {%- endif %}
+                      type="text"
+                      placeholder="0"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" 
+                      onChange="this.form.submit()" 
+                      class="pr-2 py-3 focus:outline-none w-full"
+                    >
+                  </div>
+                </div>
+                <div class="flex flex-col basis-[47%]">
+                  <label for="Filter-{{ filter.max_value.param_name }}">To</label>
+                  <div class="flex items-center border border-[--border-color] pl-2">
+                    <span>{{ cart.currency.symbol }}</span>
+                    <input name="{{ filter.max_value.param_name }}"
+                    id="Filter-{{ filter.max_value.param_name }}"
+                    {% if filter.max_value.value -%}
+                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                    {%- endif %}
+                    type="text"
+                    placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    min="0"
+                    max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                    onChange="this.form.submit()" 
+                    class="pr-2 py-3 focus:outline-none w-full"
+                  >
+                  </div>
+                </div>
+              </div>
+            </div>
+        {%- endcase -%}
+      </div>
+    </details>
+  {%- endfor -%}   
+  </form>

@@ -1,0 +1,39 @@
+<div class="section-id-{{ section.id }}">
+    <div class="container gap-4 mx-auto px-4 ≈" >       
+            {% for designer in shop.metaobjects.designer.values %}
+                <div class="grid grid-cols-1 md:grid-cols-4 border-b border-[--border-color] py-6 gap-5 last:border-none first:pt-0">
+                    <div class="col-span-1">
+                        <img src="{{ designer.photo_big  |  image_url: width: '400x' }}">
+                    </div>
+                    <div class="col-span-1 md:col-span-3 flex flex-col gap-2">
+                        <div class="font-semibold"> {{ designer.name }}</div>
+                        <div> {{ designer.description }}</div>
+                        <div class="flex">
+                        <a href="{{ designer.website }}" class="py-2 px-5 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color]">{{ section.settings.link_name }}</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            {% endfor %}   
+              
+    </div>
+</div>
+{%  schema  %}
+    {
+      "name":"Designer",
+      "class": "section-designer ",
+      "settings": [
+        {
+            "type": "text",
+            "id":"link_name",
+            "label":"Link name",
+            "default": "View designer collection"
+        }
+      ],
+      "presets": [
+      {
+        "name":"Designer"
+      }
+    ]
+    }
+{%  endschema  %}

@@ -1,0 +1,88 @@
+{%- capture class -%}{{ class }} icon icon-{{ icon | handle }} {% if direction_aware %}reverse-icon{% endif %}{%- endcapture %}
+{%- case icon -%}
+  {%- when 'cart' -%}
+    <svg role="presentation" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" focusable="false" width="{{ width | default: 22 }}" height="{{ height | default: 22 }}" class="{{ class | strip }}" viewBox="0 0 22 22">
+    <path d="M11 7H3.577A2 2 0 0 0 1.64 9.497l2.051 8A2 2 0 0 0 5.63 19H16.37a2 2 0 0 0 1.937-1.503l2.052-8A2 2 0 0 0 18.422 7H11Zm0 0V1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+
+  {%- when 'hamburger' -%}
+    <svg role="presentation" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" focusable="false" width="{{ width | default: 22 }}" height="{{ height | default: 22 }}" class="{{ class | strip }}" viewBox="0 0 22 22">
+      <path d="M1 5h20M1 11h20M1 17h20" stroke="currentColor" stroke-linecap="round"></path>
+    </svg>
+
+  {%- when 'search' -%}
+    <svg role="presentation" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" focusable="false" width="{{ width | default: 22 }}" height="{{ height | default: 22 }}" class="{{ class | strip }}" viewBox="0 0 22 22">
+      <circle cx="11" cy="10" r="7" fill="none" stroke="currentColor"></circle>
+      <path d="m16 15 3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg> 
+
+  {%- when 'chevron-bottom' -%}
+    <svg role="presentation" focusable="false" width="{{ width | default: 10 }}" height="{{ height | default: 7 }}" class="duration-150 ease-in delay-0" viewBox="0 0 10 7">
+      <path d="m1 1 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1"></path>
+    </svg>
+
+  {%- when 'chevron-right' -%}
+    <svg role="presentation" focusable="false" width="{{ width | default: 20 }}" height="{{ height | default: 20 }}" class="{{ class | strip }}" viewBox="0 0 7 10">
+      <path d="m1 9 4-4-4-4" fill="none" stroke="currentColor" stroke-width="1"></path>
+    </svg>
+    {%- when 'chevron-right-white' -%}
+      <svg role="presentation" focusable="false" width="{{ width | default: 20 }}" height="{{ height | default: 20 }}" class="{{ class | strip }}" viewBox="0 0 7 10">
+        <path d="m1 9 4-4-4-4" fill="none" stroke="#fff" stroke-width="1"></path>
+      </svg>
+
+  {%- when 'checkmark' -%}
+    <svg class="icon icon-checkmark invisible" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9" fill="none">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.35.643a.5.5 0 01.006.707l-6.77 6.886a.5.5 0 01-.719-.006L.638 4.845a.5.5 0 11.724-.69l2.872 3.011 6.41-6.517a.5.5 0 01.707-.006h-.001z" fill="currentColor"/>
+    </svg>
+
+  {%- when 'chevron-left' -%}
+    <svg role="presentation" focusable="false" width="{{ width | default: 29 }}" height="{{ height | default: 20}}" class="{{ class | strip }}" viewBox="0 0 7 10">
+      <path d="M6 1 2 5l4 4" fill="none" stroke="currentColor" stroke-width="1"></path>
+    </svg>
+    
+    {%- when 'chevron-left-white' -%}
+      <svg role="presentation" focusable="false" width="{{ width | default: 29 }}" height="{{ height | default: 20}}" class="{{ class | strip }}" viewBox="0 0 7 10">
+        <path d="M6 1 2 5l4 4" fill="none" stroke="#fff" stroke-width="1"></path>
+      </svg>
+  {%- when 'filter' -%}
+    <svg class="icon icon-filter" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"fill="none">
+      <path fill-rule="evenodd" d="M4.833 6.5a1.667 1.667 0 1 1 3.334 0 1.667 1.667 0 0 1-3.334 0ZM4.05 7H2.5a.5.5 0 0 1 0-1h1.55a2.5 2.5 0 0 1 4.9 0h8.55a.5.5 0 0 1 0 1H8.95a2.5 2.5 0 0 1-4.9 0Zm11.117 6.5a1.667 1.667 0 1 0-3.334 0 1.667 1.667 0 0 0 3.334 0ZM13.5 11a2.5 2.5 0 0 1 2.45 2h1.55a.5.5 0 0 1 0 1h-1.55a2.5 2.5 0 0 1-4.9 0H2.5a.5.5 0 0 1 0-1h8.55a2.5 2.5 0 0 1 2.45-2Z" fill="currentColor"/>
+    </svg>
+
+  {%- when 'close' -%}
+    <svg role="presentation" stroke-width="2" focusable="false" width="{{ width | default: 24 }}" height="{{ height | default: 24 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
+      <path d="M17.658 6.343 6.344 17.657M17.658 17.657 6.344 6.343" stroke="currentColor"></path>
+    </svg>
+
+    {%- when 'trash' -%}
+      <svg fill="#000000" height="16px" width="16px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315 315" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 315 315" data-ember-extension="1">
+          <g>
+            <path d="m256.774,23.942h-64.836v-6.465c0-9.636-7.744-17.477-17.263-17.477h-34.348c-9.521,0-17.266,7.841-17.266,17.478v6.465h-64.835c-9.619,0-17.445,7.76-17.445,17.297v11.429c0,7.168 4.42,13.33 10.698,15.951 1.989,39.623 13.5,231.193 14.018,239.801 0.222,3.696 3.284,6.58 6.987,6.58h170.033c3.703,0 6.766-2.884 6.987-6.58 0.518-8.607 12.028-200.178 14.018-239.801 6.278-2.621 10.698-8.783 10.698-15.951v-11.43c5.68434e-14-9.537-7.826-17.297-17.446-17.297zm-119.713-6.464c0-1.918 1.465-3.478 3.266-3.478h34.348c1.8,0 3.264,1.56 3.264,3.478v6.465h-40.877v-6.465zm-82.282,23.761c0-1.818 1.546-3.297 3.445-3.297h198.549c1.899,0 3.445,1.478 3.445,3.297v11.429c0,1.819-1.546,3.299-3.445,3.299h-198.548c-1.899,0-3.445-1.479-3.445-3.299v-11.429zm181.143,259.761h-156.848c-2.055-34.247-11.479-191.674-13.51-231.033h183.867c-2.031,39.359-11.454,196.786-13.509,231.033z"/>
+            <path d="m157.5,95.125c-3.866,0-7,3.134-7,7v176.109c0,3.866 3.134,7 7,7 3.866,0 7-3.134 7-7v-176.109c0-3.866-3.134-7-7-7z"/>
+            <path d="m110.2,102.04c-0.202-3.86-3.507-6.837-7.355-6.625-3.86,0.201-6.827,3.494-6.625,7.355l9.182,175.829c0.195,3.736 3.285,6.635 6.984,6.635 0.123,0 0.247-0.003 0.371-0.01 3.86-0.201 6.827-3.494 6.625-7.355l-9.182-175.829z"/>
+            <path d="m212.155,95.415c-3.899-0.223-7.153,2.764-7.355,6.625l-9.184,175.829c-0.202,3.861 2.765,7.154 6.625,7.355 0.125,0.007 0.248,0.01 0.371,0.01 3.698,0 6.789-2.898 6.984-6.635l9.184-175.829c0.202-3.861-2.764-7.154-6.625-7.355z"/>
+          </g>
+      </svg>
+
+      {%- when 'plus' -%}
+        <svg role="presentation" focusable="false" stroke-width="2" width="{{ width | default: 12 }}" height="{{ height | default: 12 }}" class="{{ class | strip }}" viewBox="0 0 12 12">
+          <path d="M6 0V12" fill="none" stroke="currentColor"></path>
+          <path d="M0 6L12 6" fill="none" stroke="currentColor"></path>
+        </svg>
+  
+      {%- when 'minus' -%}
+        <svg role="presentation" focusable="false" width="{{ width | default: 10 }}" height="{{ height | default: 2 }}" class="{{ class | strip }}" viewBox="0 0 10 2">
+          <path d="M0 0H10V2H0V0Z" fill="currentColor"></path>
+        </svg>
+
+        {%- when 'linkedin' -%}
+        <svg aria-hidden="true" class="icon svg-linkedin" viewBox="0 0 310 310" fill="currentColor" focusable="false" role="presentation"><path d="M72.16 99.73H9.927a5 5 0 0 0-5 5v199.928a5 5 0 0 0 5 5H72.16a5 5 0 0 0 5-5V104.73a5 5 0 0 0-5-5zM41.066.341C18.422.341 0 18.743 0 41.362 0 63.991 18.422 82.4 41.066 82.4c22.626 0 41.033-18.41 41.033-41.038C82.1 18.743 63.692.341 41.066.341zM230.454 94.761c-24.995 0-43.472 10.745-54.679 22.954V104.73a5 5 0 0 0-5-5h-59.599a5 5 0 0 0-5 5v199.928a5 5 0 0 0 5 5h62.097a5 5 0 0 0 5-5V205.74c0-33.333 9.054-46.319 32.29-46.319 25.306 0 27.317 20.818 27.317 48.034v97.204a5 5 0 0 0 5 5H305a5 5 0 0 0 5-5V194.995c0-49.565-9.451-100.234-79.546-100.234z"/></svg>
+        
+        {%- when 'instagram' -%}
+        <svg class="icon" width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" focusable="false" role="presentation"><path d="M24 0c-6.518 0-7.335.028-9.895.144-2.555.117-4.3.523-5.826 1.116-1.578.613-2.917 1.434-4.25 2.768C2.693 5.362 1.872 6.701 1.26 8.28.667 9.806.26 11.55.144 14.105.028 16.665 0 17.482 0 24s.028 7.335.144 9.895c.117 2.555.523 4.3 1.116 5.826.613 1.578 1.434 2.917 2.768 4.25 1.334 1.335 2.673 2.156 4.251 2.77 1.527.592 3.271.998 5.826 1.115 2.56.116 3.377.144 9.895.144s7.335-.028 9.895-.144c2.555-.117 4.3-.523 5.826-1.116 1.578-.613 2.917-1.434 4.25-2.768 1.335-1.334 2.156-2.673 2.77-4.251.592-1.527.998-3.271 1.115-5.826.116-2.56.144-3.377.144-9.895s-.028-7.335-.144-9.895c-.117-2.555-.523-4.3-1.116-5.826-.613-1.578-1.434-2.917-2.768-4.25-1.334-1.335-2.673-2.156-4.251-2.769-1.527-.593-3.271-1-5.826-1.116C31.335.028 30.518 0 24 0Zm0 4.324c6.408 0 7.167.025 9.698.14 2.34.107 3.61.498 4.457.827 1.12.435 1.92.955 2.759 1.795.84.84 1.36 1.64 1.795 2.76.33.845.72 2.116.827 4.456.115 2.53.14 3.29.14 9.698s-.025 7.167-.14 9.698c-.107 2.34-.498 3.61-.827 4.457-.435 1.12-.955 1.92-1.795 2.759-.84.84-1.64 1.36-2.76 1.795-.845.33-2.116.72-4.456.827-2.53.115-3.29.14-9.698.14-6.409 0-7.168-.025-9.698-.14-2.34-.107-3.61-.498-4.457-.827-1.12-.435-1.92-.955-2.759-1.795-.84-.84-1.36-1.64-1.795-2.76-.33-.845-.72-2.116-.827-4.456-.115-2.53-.14-3.29-.14-9.698s.025-7.167.14-9.698c.107-2.34.498-3.61.827-4.457.435-1.12.955-1.92 1.795-2.759.84-.84 1.64-1.36 2.76-1.795.845-.33 2.116-.72 4.456-.827 2.53-.115 3.29-.14 9.698-.14Zm0 7.352c-6.807 0-12.324 5.517-12.324 12.324 0 6.807 5.517 12.324 12.324 12.324 6.807 0 12.324-5.517 12.324-12.324 0-6.807-5.517-12.324-12.324-12.324ZM24 32a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm15.691-20.811a2.88 2.88 0 1 1-5.76 0 2.88 2.88 0 0 1 5.76 0Z" fill="currentColor" fill-rule="evenodd"/></svg>
+        
+        {%- when 'facebook' -%}
+          <svg role="presentation" focusable="false" width="{{ width | default: 27 }}" height="{{ height | default: 27 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.183 21.85v-8.868H7.2V9.526h2.983V6.982a4.17 4.17 0 0 1 4.44-4.572 22.33 22.33 0 0 1 2.667.144v3.084h-1.83a1.44 1.44 0 0 0-1.713 1.68v2.208h3.423l-.447 3.456h-2.97v8.868h-3.57Z" fill="currentColor"/>
+          </svg>
+{%- endcase -%}  

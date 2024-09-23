@@ -1,0 +1,59 @@
+<div class="section-id-{{ section.id }}">
+    <div class="container mx-auto p-4">
+        {% paginate search.results by products-per-page %} 
+            <div class="grid grid-cols-2  md:grid-cols-4 gap-6">
+                {% if search.performed%}
+                    {% assign result_number = paginate.items  %}
+                    <h2 class="col-span-4">{{'search.result_found' | t: amount: result_number }}</h2>                  
+                    {% for result in search.results %}                   
+                        {% if result.object_type == 'page'%}
+                            <a href="{{ result.url }}">{{ result.title }}</a>                            
+                        {% elsif result.object_type == 'article' and item.image %}
+                            <a href="{{ result.url }}">{{ result.title }}</a>
+                        {% else %}  
+                        <div class="col-span-1">
+                            {%  render 'product-grid', product: result %} 
+                        </div>                        
+                        {% endif %}
+                    {% endfor  %}
+                    {% else %}
+                    <h2 class="col-span-3">{{'search.no_result' | t}}</h2>
+                {% endif %}          
+            </div>
+            <div class="flex justify-center text-sm gap-5 mt-6">{{ paginate | default_pagination }}</div>  
+        {% endpaginate %}  
+    </div>
+</div>
+
+{%  schema  %}
+    {
+      "name":"Search",
+      "class": "section-search", 
+      "settings": [
+        {
+          "type":"range",
+          "id": "products_per_page",
+          "min" : 6,
+          "max" : 20,
+          "step": 1,
+          "label":"Products per page",
+          "default": 10
+        },
+        {
+          "type":"range",
+          "id": "items_per_row",
+          "min" : 3,
+          "max" : 5,
+          "step": 1,
+          "label":"Items per row on desktop",
+          "default": 3
+        },
+        {
+          "type": "checkbox",
+          "id":"show-quick-buy",
+          "label": "Show quick buy",
+          "default": true
+        }
+      ]
+}
+{%  endschema  %}

@@ -1,0 +1,91 @@
+<div class="drawer cart-drawer translate-x-[100%] fixed top-0  flex flex-col  opacity-0 bg-gray-900/75 transition-all pl-4 pb-4 pt-4 md:pr-4 w-full h-full z-[9999]">
+    <div class="drawer-box flex-grow shrink w-[90%] md:w-[480px] bg-white flex flex-col  rounded-md ml-auto overflow-auto transition-all" data-money-format="{{ shop.money_format }}"> 
+        <header class="flex justify-between p-4 border-b border-[--border-color]">
+          <h2 class="flex-grow ">{{ 'cart.cart_drawer.cart_title' | t}}</h2>
+          <div class="flex items-center gap-3">
+            <div class="flex gap-2">
+                <span class="cart-drawer--item-count ">{{ cart.item_count }}</span><span>{{ 'cart.cart_drawer.cart_quantity' | t}}</span>
+            </div>          
+            <button type="button" class="drawer-close cursor-pointer transition-all hover:rotate-45">{%- render 'icon' with 'close' -%}</button>
+          </div>
+        </header>
+        {% form 'cart', cart, class:'flex flex-col flex-grow shrink' %}
+            {% if cart.item_count == 0 %}
+                <div class="text-center flex justify-center items-center h-full "><p>{{ 'cart.general.cart_empty' | t}}</p></div>
+            {% else %}
+                <div class="px-4 pt-4">
+                    {% if settings.enable_freeshipping %}                
+                        {%  render 'free-shipping-bar' %}                     
+                    {% endif %}
+                </div>               
+                <div class="message-container p-4 flex-grow shrin flex flex-col gap-4 ">
+                    {% for item in cart.items %}
+                        <div class="cart-drawer-item flex bg-white items-center rounded-md border-[--border-color] text-sm overflow-hidden" data-line-item-key ="{{ item.key }}">                           
+                                <div class="w-[100px] pr-4 md:w-[140px]">
+                                    <img src="{{ item.image | img_url: '150x'  }}" alt="{{ item.title }}" class="w-full" alt="{{ item.image.alt | escape }}">
+                                </div>                               
+                                <div class="flex-grow shrink md:px-4">
+                                    <div class="flex gap-4 items-center">
+                                        <div class="flex-grow shrink">
+                                            <h3 class="text-xs md:text-sm font-medium"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                                            {% unless item.product.has_only_default_variant %}
+                                                <div class="text-[--light-gray--color]">{{ item.variant.title }}</div>
+                                            {% endunless %}
+                                            {% if settings.show_properties %}
+                                                {% for prop in item.properties %}  
+                                                    {%  assign  firstChar = prop[0] |  slice: 0   %}  
+                                                    <div class="flex gap-4 text-[--light-gray--color] text-xs">
+                                                        {%  unless prop[1] == blank or firstChar == '_' %} 
+                                                        {{ prop[0] }} : {{ prop[1] }}
+                                                    {% endunless %} 
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                            <div class="font-medium md:hidden">{{ item.final_line_price | money}}</div>                                              
+                                            <div class="flex cart-drawer-quantity-selector mt-3">
+                                                <button type="button" class="cart-drawer-quantity-selector-minus flex items-center justify-center w-[28px] h-[28px] cursor-pointer border  border-[--border-color">-</button>
+                                                <input type="text" name ="updates[]" value=" {{ item.quantity }}" class="w-[28px] border-t border-b border-[--border-color]  flex text-center">
+                                                <button type="button" class="cart-drawer-quantity-selector-plus flex items-center justify-center w-[28px] h-[28px] cursor-pointer border  border-[--border-color">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <div class="font-medium hidden md:block">{{ item.final_line_price | money}}</div>
+                                            <a class="remove_item underline" href="{{ item.url_to_remove }}">{%- render 'icon' with 'trash' -%}</a>
+                                        </div>
+                                        
+                                    </div>                                                                      
+                                </div>                                                      
+                        </div>
+                    {% endfor %}                  
+                </div>
+
+                <footer class="p-4 border-t border-[--border-color]">
+                {% if cart.total_discount > 0 %} 
+                    <div class="flex justify-between mb-4">
+                        <h3>{{ 'cart.general.cart_total_discount' | t }}</h3>
+                        <span >{{ cart.total_discounts | money }}</span>
+                    </div>
+                {% endif %}
+                <div class="flex justify-between mb-4">
+                    <h3>{{ 'cart.general.cart_total' | t }}</h3>
+                    <span class="cart_total_price">{{ cart.total_price | money }}</span>
+                </div>
+                <button type="submit" name="checkout" class="py-4 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] w-full">Checkout</button> 
+            </footer>
+                    
+            {% endif %}
+            
+        {% endform %}
+        
+       
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Cart drawer",
+        "class": "section-cart-drawer",
+        "settings": []
+    }
+{% endschema %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+

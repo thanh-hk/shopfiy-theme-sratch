@@ -1,0 +1,481 @@
+<div class="section-id-{{ section.id }}">
+    <div class="container mx-auto p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="product-left relative">
+                {% if  product.metafields.custom.new_arrival %}
+                    <div class="absolute border border-[--border-color] top-5 left-5 py-1 px-4 bg-white text-black rounded-[--border-overlay_radius]">{{ 'products.product.new_arrival_label' | t }}</div>
+                {% endif %}
+                {% if product.selected_or_first_available_variant.featured_image %}
+                    {%  assign  featured =  product.selected_or_first_available_variant.featured_image %} 
+                    <div><img class="product-image border border-[--border-color]" src="{{ featured |  image_url  }}" loading="eager"></div>
+                    
+                {% else %}
+                {%  assign  featured =  product.featured_image %} 
+                    <img class="product-image border border-[--border-color]" src=" {{ featured |  image_url  }}">
+                {% endif %}
+                {% if section.settings.show_product_thumbs %}
+                    <div class="flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
+                        {% for image in product.images %}               
+                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] {% if image == featured %} selected {% endif %}">
+                                <img class="object-center object-cover h-full" src="{{ image |  image_url: master }}" lazyload /> 
+                        </div>               
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="hidden md:grid grid-cols-4 gap-4 mt-4">
+                        {% for image in product.images offset: 1%}               
+                        <div class="col-span-2 border border-[--border-color] flex items-center [&:nth-child(3)]:col-span-1 [&:nth-child(4)]:col-span-3 [&:nth-child(5)]:col-span-4">
+                                <img class="object-center " src="{{ image |  image_url }}" lazyload /> 
+                        </div>               
+                        {% endfor %}
+                    </div>
+                    <div class="md:hidden flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
+                        {% for image in product.images %}               
+                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] {% if image == featured %} selected {% endif %}">
+                                <img class="object-center object-cover h-full " src="{{ image |  image_url: master }}" lazyload /> 
+                        </div>               
+                        {% endfor %}
+                    </div>
+            {% endif %}       
+            </div>
+            <div class="product-right flex flex-col gap-4 xl:pr-40">
+                {% for block in section.blocks %}
+                    {% case block.type %}
+                        {% when 'product-sku' %}
+                            {% assign current_variant = product.selected_or_first_available_variant %}
+                            <div class="product-sku text-[--light-gray--color] text-sm" {{ block.shopify_attributes }}>{{ current_variant.sku }}</div>
+                        {% when 'product-title' %}
+                            <h1 class="text-2xl" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+                        {% when 'product-vendor' %}
+                            <div class="text-[--light-gray--color] text-sm" {{ block.shopify_attributes }}>{{ product.vendor | link_to: vendor_url }}</div>
+                        {% when 'product-description' %}
+                            <div {{ block.shopify_attributes }}>{{ product.description }}</div>
+                        {% when 'product-price' %}
+                            <div class=" flex gap-4 items-center" {{ block.shopify_attributes }}>                        
+                                <div class="product-price font-medium text-2xl">{{ product.selected_or_first_available_variant.price | money }}</div> 
+                                <div class="product-compare-price text-[--light-gray--color] text-sm line-through
+                                {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %} hidden {% endunless %}" >{{ product.selected_or_first_available_variant.compare_at_price |  money }}
+                                </div>
+                                {% if block.settings.show_discount_label %}
+                                    {%- assign savings = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | times: 100.0 | divided_by: product.selected_or_first_available_variant.compare_at_price | round | append: '%' -%}
+                                    <span class="saving-label {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %} hidden {% endunless %} bg-[--sale-label-bg] text-[--sale-label-text] text-xs md:text-sm px-4 py-2 rounded-[--border-radius]">{{- 'products.labels.saving_label' | t: amount: savings}}</span>
+                                {% endif %}
+                                {% if block.settings.show_sold_out_label %}
+                                <span class="{% if product.selected_or_first_available_variant.available %} hidden {% endif %} sold-out-label bg-[--sale-label-bg] text-[--sale-label-text] text-xs md:text-sm px-4 py-2 rounded-[--border-radius]"> {{- 'products.labels.sold_out_label' | t -}}</span> 
+                                {% endif %}                                     
+                            </div>                                  
+                        {% when 'variant' %}
+                            <div {{ block.shopify_attributes }}>
+                            {% if block.settings.variant_picker_type == 'dropdown' %}
+                                <select name="id" class=" {% if product.has_only_default_variant %} opacity-0{% endif %} border border-[--border-color]  p-4">                   
+                                    {% for variant in product.variants %}
+                                        <option value="{{ variant.id }}">{{ variant.title }}</option>  
+                                    {% endfor %} 
+                                </select>                        
+                                {% else %}
+                                    {% if product.variants.size > 1 %}
+                                        <div class="product-option">
+                                            {% for option in product.options_with_values %}
+                                                <fieldset class="mb-5">
+                                                    <legend class="mb-3">{{ option.name }}</legend>
+                                                    {% for value in option.values %}
+                                                        <input 
+                                                            {% if option.selected_value == value %}checked {% endif %}
+                                                            type="radio" 
+                                                            name="{{ option.name }}" 
+                                                            value="{{ value }}"
+                                                            id="{{ option.name |  handleize }} - {{ value |  handleize }}"
+                                                            class="{% unless value.available %} disable{% endunless %} hidden "> 
+                                                        <label class="cursor-pointer mr-3 py-2 px-5 text-center border border-[--border-color] rounded-[--border-radius]" for ="{{ option.name |  handleize }} - {{ value |  handleize }}">{{ value }}</label>
+                                                    {% endfor %}
+                                                </fieldset>
+                                                {% endfor %}
+                                        </div>
+                                    {% endif %}
+                            {% endif %}
+                            </div>
+                           
+                               
+                        {% when 'buy-button' %}
+                            <div {{ block.shopify_attributes }}>
+                            {% form 'product', product, class:'shopify-product-form'  %} 
+                                {% if settings.show_properties %}  
+                                    <div class="flex flex-col mb-4">                                
+                                        <label class="flex flex-col">Size<label>
+                                        <select type="text" name="properties[Size" class=" text-sm border border-[--border-color] p-2 min-w-[200px]">
+                                            <option value="Back">Back</option>
+                                            <option value="Front">Front</option>
+                                        </select>
+                                    </div>  
+                                    <div class="flex flex-col mb-4">
+                                        <label class="flex flex-col">Engraving<label>
+                                        <input type="text" name="properties[Engraving]" class="border border-[--border-color] mt-2 p-3" placeholder="Print text">
+                                    </div> 
+                                {% endif %}                                                                       
+                                <input id="product-id" type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"> 
+                                <div class="flex gap-4 flex-col">
+                                    {% if block.settings.show_quantity %}                         
+                                        <div class="flex">
+                                            <div class="flex quantity-selector border-[--border-color] border">
+                                                <button type="button" class="quantity-selector-minus flex items-center justify-center w-[50px] h-[50px] cursor-pointer">{%- render 'icon' with 'minus' -%}</button>
+                                            <input id="quantity" value=" 1" class="text-center  w-[50px] h-[50px]" name="quantity"> 
+                                            <button type="button" class="quantity-selector-plus flex items-center justify-center w-[50px] h-[50px] cursor-pointer">{%- render 'icon' with 'plus' -%}</button>
+                                            </div>               
+                                        </div> 
+                                    {% endif %} 
+                                    <div class="flex gap-3">
+                                        <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="add to cart" 
+                                            class="w-full p-4 rounded-md flex justify-center items-center text-white bg-[--primary-color]" id="add-to-cart">
+                                                {% if product.selected_or_first_available_variant.available %}
+                                                    {{- 'products.product.add_to_cart' | t -}}
+                                                {% else %}
+                                                    {{- 'products.product.sold_out' | t -}}
+                                                {% endif %}
+                                        </button> 
+                                        {% if block.settings.show_buy_now %}
+                                            <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="buy it now" 
+                                                class="w-full p-4 rounded-md flex justify-center items-center text-white bg-[--primary-color]" id="buy-it-now">
+                                                    {% if product.selected_or_first_available_variant.available %}
+                                                        {{- 'products.product.buy_it_now' | t -}}
+                                                    {% else %}
+                                                        {{- 'products.product.sold_out' | t -}}
+                                                    {% endif %}
+                                            </button> 
+                                        {% endif %} 
+                                    </div>                                                     
+                                </div>                                                
+                            {% endform %}
+                            </div>
+                        {% when 'pair-with' %}
+                            <div class="flex flex-col mt-5" {{ block.shopify_attributes }}>
+                                {%- assign metafield_parts = block.settings.items_value_metafield | split: '.' -%}
+                                    {%- assign metafield_namespace = metafield_parts | first -%}
+                                    {%- assign metafield_key = metafield_parts | last -%}
+                                    {%- assign product_metafield = product.metafields[metafield_namespace][metafield_key].value -%}
+                                    {%- if product_metafield != blank -%}
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h2>{{ block.settings.title }}</h2>
+                                            <div class="gap-2 hidden md:flex">
+                                                <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-left' -%}</button> 
+                                                <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-right' -%}</button>
+                                            </div>
+                                        </div>                                
+                                <div class="slides overflow-auto max-w-[100rem] h-[18rem] md:h-[21rem] relative md:overflow-hidden scroll-smooth">
+                                    {% for product in product_metafield %}
+                                    <div class="slide absolute top-0 w-[46%] md:w-[33.33%] transition pr-3">
+                                        {%- render 'product-grid', product: product -%}
+                                    </div>                                
+                                    {%- endfor -%}                                                                                      
+                                </div>
+                            {%- endif -%}
+                            </div>
+                       
+                    {% endcase %}
+                {% endfor %}   
+            </div>
+        </div>       
+    </div>
+</div>
+
+{%  schema  %}  
+    {
+        "name" :"Product page",
+        "class" :"section-product-page",
+        "settings": [
+            {
+            "type": "checkbox",
+            "id":"show-quick-buy",
+            "label": "Show quick buy",
+            "default": true
+            },
+            {
+                "type": "checkbox",
+                "id":"show_product_thumbs",
+                "label": "Show product thumbnails",
+                "default": true
+            }
+        ],
+        "blocks": [
+            {
+                "type":"product-title",
+                "name":"Title"
+
+            },
+            {
+                "type":"product-sku",
+                "name":"Product sku"
+            },
+            {
+                "type":"product-vendor",
+                "name":"Product vendor"
+            },          
+            {
+                "type":"product-description",
+                "name":"Description"
+            },
+           
+            {
+                "type":"product-price",
+                "name":"Price",
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id" :"show_discount_label",
+                        "label": "Show discount label",
+                        "default": true
+                    },
+                    {
+                        "type": "checkbox",
+                        "id" :"show_sold_out_label",
+                        "label": "Show sold out label",
+                        "default": true
+                    }
+                ]
+            },           
+            {
+                "type":"buy-button",
+                "name":"Buy button",
+                "settings": [
+                    {
+                        "type":"checkbox",
+                        "id":"show_quantity",
+                        "label":"Show quantity",
+                        "default": true
+                    },
+                    {
+                        "type":"checkbox",
+                        "id":"show_buy_now",
+                        "label":"Show buy now",
+                        "default": true
+                    }
+                ]
+            },
+            {
+                "type":"variant",
+                "name" :"Variant picker",
+                "settings": [
+                    {
+                        "type":"select",
+                        "id":"variant_picker_type",
+                        "label": "Style",
+                        
+                        "options": [
+                            {
+                                "value": "dropdown",
+                                "label": "Dropdown"
+                            },
+                            {
+                                "value": "block",
+                                "label": "Block"
+                            }                   
+                        ],
+                            "default": "block"
+                    }                                      
+                ]  
+            },
+            {
+                "type":"pair-with",
+                "name":"Pair with",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id":"title",
+                        "label": "Title",
+                        "default": "Pair with"
+                    },
+                    {
+                        "type": "text",
+                        "id":"items_value_metafield",
+                        "label": "Metafield"
+                    }
+
+                ]
+            }
+        ]
+    }
+{% endschema %}
+{{ 'variant-select.js' |  asset_url |  script_tag }}
+<script>
+    var product = {{ product | json }}; 
+    var thumbActive = {{ section.settings.show_product_thumbs }};  
+    console.log(product);
+    var addToCartText = "{{- 'products.product.add_to_cart' | t -}}";
+    var buyItNowText = "{{- 'products.product.buy_it-now' | t -}}";
+    var soldOutText = "{{- 'products.product.sold_out' | t -}}";
+    /*Get variant ID on select type 
+    if (document.querySelector('select[name="id"]')){
+        document.querySelector('select[name="id"]').addEventListener('change', (e) => {
+            var selectElement = event.target;
+            var value = Number(selectElement.value);
+        document.querySelector('#product-id').value = value;
+        let matchedVariant = product.variants.find(variant => variant.id == value);           
+        var url = new URLParse(window.location.href, true);  
+            url.query.variant = matchedVariant.id;
+            window.history.replaceState(null, null, url.toString()); 
+            
+         //change price
+         document.querySelector('.product-price').textContent = formatMoney(matchedVariant.price," {{ shop.money_format }}");
+            document.querySelector('.product-compare-price').textContent = formatMoney(matchedVariant.compare_at_price," {{ shop.money_format }}");          
+
+            if (matchedVariant.compare_at_price > matchedVariant.price){
+                var saving = (((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price) * 100).toFixed(0);
+                document.querySelector('.saving-label').textContent = "save" + saving + "%";
+                document.querySelector('.product-compare-price').classList.remove('hidden');
+            } else {
+                document.querySelector('.product-compare-price').classList.add('hidden');
+        }
+
+        //change add to cart button
+        var add = document.querySelector('#add-to-cart');
+            var buy = document.querySelector('#buy-it-now');
+            if( matchedVariant.available ) {
+                add.textContent = addToCartText
+                add.disabled = false;
+                buy.textContent = buyItNowText
+                buy.disabled = false;
+                buy.style.display = "block";
+                document.querySelector('.saving-label').classList.add('hidden'); 
+            }else{
+                add.textContent = soldOutText
+                add.disabled = true; 
+                buy.style.display = "none";
+                buy.disabled = true;
+                document.querySelector('.saving-label').classList.remove('hidden'); 
+            }
+
+        //change product image
+        document.querySelector('.product-image').setAttribute('src', matchedVariant.featured_image.src);
+        if(document.querySelector('.product-image-thumbs div.selected')){
+            document.querySelector('.product-image-thumbs div.selected').classList.remove('selected'); 
+        }    
+        document.querySelectorAll('.product-image-thumbs div')[matchedVariant.featured_image.position - 1].classList.add('selected');
+
+    });
+    }
+    */
+    /*Get variant ID ID on block format */
+    document.querySelectorAll('.product-option input[type="radio"]').forEach (radio => { 
+        radio.addEventListener('change', ()=> {
+            //find select option
+            var selectedOptions = [];
+            document.querySelectorAll('.product-option input[type="radio"]:checked').forEach( radio => {
+                selectedOptions.push(radio.value);                             
+            });         
+           
+            console.log(selectedOptions);
+           //find matched variant
+
+           var matchedVariant = product.variants.find(variant => {
+            var pass = true;
+             for ( var i = 0; i < selectedOptions.length; i++){                
+                if ( selectedOptions.indexOf(variant.options[i])=== -1) {
+                    pass = false;
+                    break
+                }               
+             }
+             return pass;
+           });
+
+           // change product form id
+           document.querySelector('#product-id').value = matchedVariant.id;
+           console.log(matchedVariant);
+
+           //change url
+            var url = new URLParse(window.location.href, true);              
+            url.query.variant = matchedVariant.id;
+            window.history.replaceState(null, null, url.toString());
+           
+            //change price
+            document.querySelector('.product-price').textContent = formatMoney(matchedVariant.price," {{ shop.money_format }}");
+            document.querySelector('.product-compare-price').textContent = formatMoney(matchedVariant.compare_at_price," {{ shop.money_format }}");           
+            if (matchedVariant.compare_at_price > matchedVariant.price){
+                var saving = (((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price) * 100).toFixed(0);
+                document.querySelector('.saving-label').textContent = "Save " + saving + "%";
+                document.querySelector('.product-compare-price').classList.remove('hidden');
+            } else {
+                document.querySelector('.product-compare-price').classList.add('hidden');
+            }
+
+            //change product sku
+            document.querySelector('.product-sku').textContent = matchedVariant.sku;
+
+            //change product image
+            if (matchedVariant.featured_image.src);{
+                document.querySelector('.product-image').setAttribute('src', matchedVariant.featured_image.src);
+            }
+            if (thumbActive === true) {  
+                document.querySelector('.product-image-thumbs div.selected').classList.remove('selected');
+                document.querySelectorAll('.product-image-thumbs div')[matchedVariant.featured_image.position - 1].classList.add('selected');
+            }
+
+           //change add to cart button
+            var add = document.querySelector('#add-to-cart');
+            var buy = document.querySelector('#buy-it-now');
+            if( matchedVariant.available ) {
+                add.textContent = addToCartText
+                add.disabled = false;
+                buy.textContent = 'Buy it now'
+                buy.disabled = false;
+                buy.style.display = "block";
+                document.querySelector('.sold-out-label').classList.add('hidden');
+            }else{
+                add.textContent = 'Buy it now'
+                add.disabled = true; 
+                buy.style.display = "none";
+                buy.disabled = true;
+                document.querySelector('.sold-out-label').classList.remove('hidden');  
+            }
+        
+        })
+    });
+
+     // Buy it now
+     document.querySelector('#buy-it-now').addEventListener('click', (e) => {
+        e.preventDefault();
+        var form = document.querySelector('.shopify-product-form');
+        //<input type="hidden" name="return_to" value="/checkout/">
+
+        var input = document.createElement('input');
+        input.value = "/checkout/";
+        input.name ="return_to";
+        input.type = "hidden";
+        form.appendChild(input);
+        form.submit();
+
+     });
+
+     //change quantity
+     if(document.querySelector('.quantity-selector-plus')){
+        document.querySelector('.quantity-selector-plus').addEventListener('click', () => {
+        var currentVal = Number(document.querySelector('#quantity').value);
+        var newQuanity = currentVal + 1; 
+        document.querySelector('#quantity').value = newQuanity;
+      
+        });
+    }
+
+    if(document.querySelector('.quantity-selector-minus')){
+        document.querySelector('.quantity-selector-minus').addEventListener('click', () => {
+        var currentVal = Number(document.querySelector('#quantity').value);
+        if ( currentVal > 1){
+            document.querySelector('#quantity').value = currentVal - 1;
+        }     
+    });
+    }    
+
+    //img show on thubmails click
+    document.querySelectorAll('.product-image-thumbs div').forEach( div => {
+        div.addEventListener('click', ()=>{
+            document.querySelector('.product-image-thumbs div.selected').classList.remove('selected');
+            div.classList.add('selected');
+            document.querySelector('.product-image').setAttribute('src', div.querySelector('img').getAttribute('src'));              
+        })
+    });   
+
+
+
+
+
+
+</script>
+

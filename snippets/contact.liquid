@@ -1,0 +1,27 @@
+{% form 'contact', class:'flex flex-col flex-grow justify-center' %}
+    {{ form.errors | default_errors }}
+  
+    <div class="first-name mb-4">
+      <input type="text" class="p-4 w-full border border-[--border-color] rounded-[--border-radius] " name="contact[first_name]" id="first-name" placeholder="First name"/>
+    </div>
+  
+    <div class="last-name mb-4">
+      <input type="text" class="p-4 w-full border border-[--border-color] rounded-[--border-radius]" name="contact[last_name]" id="last-name" placeholder="Last name" />
+    </div>
+  
+    <div class="phone mb-4">
+      <input type="tel" class="p-4 w-full border border-[--border-color] rounded-[--border-radius]" name="contact[phone]" id="phone" placeholder="Your phone" />
+    </div>
+  
+    <div class="email mb-4">
+      <input type="email" class="p-4 w-full border border-[--border-color] rounded-[--border-radius]" name="contact[email]" id="email" placeholder="Your email"/>
+    </div>
+  
+    <div class="message mb-4">
+      <textarea name="contact[body]" class="p-4 w-full border border-[--border-color] rounded-[--border-radius]" id="message" placeholder="Your message"></textarea>
+    </div>
+  
+    <div class="submit">
+      <button type="submit" class="py-4 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] w-full">Contact us </button>
+    </div>
+  {% endform %}

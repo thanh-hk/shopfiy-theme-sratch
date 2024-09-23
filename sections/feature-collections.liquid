@@ -1,0 +1,176 @@
+
+{%  style  %}
+    .section-id-{{ section.id }} .slide{
+        --item-per-row: {{ section.settings.items_per_row }};
+    }
+{% endstyle %}  
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
+    <div class="container px-4 mx-auto" data-money-format="{{ shop.money_format }}">
+        <div class="operations__tab-container flex justify-center gap-4 mb-6 ">
+            <div class="flex gap-4">
+                {% for block in section.blocks %}  
+                    {%- assign collection = collections[block.settings.collection] -%}
+                    {% if collection != blank %}
+                        <div class="{% if forloop.index == 1 %}operations__tab--active{% endif %} operations__tab operations__tab--{{ forloop.index }} cursor-pointer relative 
+                            before:absolute before:z-20 before:w-full before:h-[2px] before:bg-[--primary-color] before:transition-all before:scale-x-0 before:bottom-0 before:left-0 hover:before:scale-x-100" data-tab="{{ forloop.index }}">
+                            <h2>{{ collection.title }}</h2>
+                        </div>
+                    {% else %}
+                        <div class="{% if forloop.index == 1 %}operations__tab--active{% endif %} operations__tab operations__tab--{{ forloop.index }} cursor-pointer relative 
+                            before:absolute before:z-20 before:w-full before:h-[2px] before:bg-[--primary-color] before:transition-all before:scale-x-0 before:bottom-0 before:left-0 hover:before:scale-x-100" data-tab="{{ forloop.index }}">
+                                {%- capture current %}{% cycle 1, 2 %}{% endcapture -%}                            
+                            <h2>{{- 'collection -' | append: current  -}}</h2>
+                        </div>
+                    {% endif %}
+                {%- endfor -%}       
+            </div>
+        </div>
+        {% for block in section.blocks %}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {% if collection != blank %}  
+                <div class="{% if forloop.index == 1 %}operations__content--active{% endif %} operations__content transition-all operations__content--{{ forloop.index }} relative">
+                    {%- case section.settings.items_per_row -%}
+                    {%- when '20%' -%}
+                      {%- assign items_per_row = 5 -%}
+
+                    {%- when '25%' -%}
+                        {%- assign items_per_row = 4 -%}
+                  {%- endcase -%}
+
+                    {% if collection.all_products_count > items_per_row %} 
+                        <div class="gap-4 justify-between mb-5 hidden md:flex items-center">
+                            {% if section.settings.show_view_all %} 
+                             <div><a class="underline" href="{{ collection.url }}">{{ 'collection.general.view_all' | t }}</a></div>
+                            {% endif %}
+                            <div class="flex gap-4">
+                                <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center ">{%- render 'icon' with 'chevron-left' -%}</button> 
+                                <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center">{%- render 'icon' with 'chevron-right' -%}</button>
+                            </div> 
+                           
+                        </div>
+                    {% endif %}
+                    <div class="slides overflow-auto max-w-[100rem] h-[17rem] md:h-[19rem] xl:h-[22rem] relative md:overflow-hidden scroll-smooth">
+                        {% for product in collection.products %}
+                            <div class="slide absolute top-0 w-[46%] md:w-[--item-per-row] transition pr-3" style="transform: translateX({{ forloop.index | minus: 1 | times: 100  }}%);">
+                                {%- render 'product-grid', product: product -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>                 
+                </div>             
+            {% else %}
+        <div class="{% if forloop.index == 1 %}operations__content--active{% endif %} operations__content transition-all operations__content--{{ forloop.index }} relative">
+            
+
+           
+                <div class="gap-4 justify-between mb-5 hidden md:flex items-center">
+                    {% if section.settings.show_view_all %} 
+                     <div><a class="underline">{{ 'collection.general.view_all' | t }}</a></div>
+                    {% endif %}
+                    <div class="flex gap-4">
+                        <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center ">{%- render 'icon' with 'chevron-left' -%}</button> 
+                        <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center">{%- render 'icon' with 'chevron-right' -%}</button>
+                    </div> 
+                   
+                </div>
+            
+            <div class="slides overflow-auto max-w-[100rem] h-[24rem] relative md:overflow-hidden scroll-smooth">
+                {% for i in (1..6) %}
+                    <div class="slide absolute top-0 w-[46%] md:w-[--item-per-row] transition pr-3 {{ forloop.index | minus: 1}}" style="transform: translateX({{ forloop.index | minus: 1 | times: 100  }}%);">
+                    {%- render 'product-grid-blank', i: i -%}
+                    </div>
+                {%- endfor -%}
+            </div>                 
+        </div>        
+                        
+            {% endif %}
+        {%- endfor -%}
+    </div>
+</div>
+{%  schema  %}  
+{
+    "name" :"Feature collections",
+    "class" :"section-feature-collections",
+    "settings": [
+        {
+            "type":"checkbox",
+            "id": "show_border_top",
+            "label": "Show border top",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "items_per_row",
+            "label": "Products per row",
+            "options": [
+                {
+                    "label": "4",
+                    "value": "25%"
+                },
+                {
+                    "label": "5",
+                    "value": "20%"
+                }                           
+            ],
+            "default": "20%"
+        },
+        {
+            "type": "checkbox",
+            "id":"show_view_all",
+            "label": "Show View all",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id":"show-quick-buy",
+            "label": "Show quick buy",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id":"show-second-image",
+            "label": "Show second image on hover",
+            "default": true,
+            "info": "Only work with product that has more than 2 images"
+        }
+                    
+    ],
+    "blocks": [
+        {
+            "type":"collection",
+            "name":"Collection",
+            "settings": [                   
+                {
+                    "type":"collection",
+                    "id": "collection",
+                    "label": "Collection "
+                }                    
+            ]
+        }                       
+    ],
+    "presets": [
+        {
+            "name":"Feature collections",
+            "settings": {
+                "items_per_row": "20%",
+                "show_view_all":true
+            },
+            "blocks": [
+                {
+                "type": "collection"
+                
+                },
+                {
+                "type": "collection"
+                
+                }
+            ]
+        }
+    ]
+}
+{%  endschema  %} 
+
+
+ 
+
+{{ 'variant-select.js' |  asset_url |  script_tag }}
+

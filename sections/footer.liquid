@@ -1,0 +1,196 @@
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %}bg-[--footer-bg-color] text-[--footer-text-color] py-4">
+    <div class="flex-col md:flex-row container p-4 mx-auto flex justify-between text-sm"> 
+        {% for block in section.blocks %}
+            {% case block.type %}
+            {% when 'navigation' %}
+                <div class="mb-6 flex flex-col md:max-w-[250px] xl:max-w-[400px]">
+                    <h2 class="mb-1 md:mb-2 uppercase">{{ block.settings.heading  }}</h2>
+                    <div class="flex flex-col max-w-[250px] gap-3">
+                        {% for link in block.settings.link_list.links -%} 
+                            <a href="{{ link.url }}" class="hover:text-[--link-hover-color]">{{ link.title }}</a>
+                        {%- endfor %}
+                    </div>                   
+                </div>
+            {% when 'text' %}
+                <div class="mb-6 flex flex-col md:max-w-[250px] xl:max-w-[400px]">
+                    <h2 class="mb-1 md:mb-2 uppercase">{{ block.settings.heading  }}</h2>
+                    <div>
+                        {{ block.settings.text }}
+                    </div>                   
+                </div>
+            {% when 'newsletter' %}
+                <div class="mb-6 flex flex-col md:max-w-[250px] xl:max-w-[400px]">
+                    <h2 class="mb-1 md:mb-2 uppercase">{{ block.settings.heading  }}</h2>
+                    <div>{{ block.settings.sub_text }}</div>
+                    <form class="flex flex-col mt-3">
+                        <input type="email" placeholder="Email address" class="p-2 rounded-md border border-[--border-color]">
+                        <button type="submit" class="w-full p-2 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3">Subcribe</button>
+                    </form>
+                </div> 
+            {% when 'image' %}
+                <div class="mb-6 flex flex-col md:max-w-[250px] xl:max-w-[400px] min-h[200px] h-[200px] overflow-hidden">
+                    {% if block.settings.heading != blank %} 
+                        <h2 class="mb-1 md:mb-2 uppercase">{{ block.settings.heading  }}</h2>
+                    {% endif %}
+                    {% if block.settings.image != blank %} 
+                        <img src="{{ block.settings.image |  image_url  }}" alt="shop.name" loading="lazy">                   
+                    {% endif %}  
+                </div>
+             {% endcase %}
+        {% endfor %}        
+    </div>
+    <div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %}">
+        <div class="flex-col md:flex-row container p-4 mx-auto flex justify-between text-sm">
+            <div class="flex flex-col">
+                <div>{{ section.settings.copy_right_text }}</div>
+                {% if section.settings.show_social_icon %}
+                    <div class="flex gap-4 mb-4 md:mb-0">
+                        <a class="w-6 h-6 fle items-center" href="{{ settings.linkedin }}">{%  render 'icon'  with 'linkedin'%}</a>
+                        <a class="w-6 h-6 flex items-center" href="{{ settings.facebook }}">{%  render 'icon'  with 'facebook'%}</a>
+                        <a class="w-6 h-6 flex items-center" href="{{ settings.instagram }}">{%  render 'icon'  with 'instagram'%}</a>
+                    </div>
+                {% endif %}   
+                
+            </div>
+            {% if section.settings.show_payment_icons %}
+                <div class="flex gap-2">
+                  {% assign enabled_payment_types = 'dankort,visa,visaelectron,master,paypal,mobilepay,viabill,apple_pay,google_pay' | remove: ' ' | split: ',' %}
+                  {% for type in enabled_payment_types %}
+                    {{ type | payment_type_svg_tag: class: 'w-[30px]' }}
+                  {% endfor %}
+                </div>        
+              {% endif %}
+        </div>
+        <div class="flex-col text-sm justify-center md:flex-row container p-4 mx-auto flex gap-4 md:justify-end">  
+            {% for link in section.settings.link_list_low.links -%} 
+                <a class="hover:text-[--link-hover-color] last:underline" href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor %}
+        
+    </div>
+    
+   
+</div>
+{%  schema  %} 
+    {
+        "name":"Footer",
+        "class": "header",  
+         "tag": "footer",
+         "settings":[
+            {
+                "type":"checkbox",
+                "id": "show_border_top",
+                "label": "Show border top",
+                "default": true
+            },
+            {
+                "type": "color",
+                "id": "footer_bg_color",
+                "label": "Footer bgcolor",
+                "default": "#000"
+            },
+            {
+                "type": "color",
+                "id": "footer_text_color",
+                "label": "Footer text color",
+                "default": "#fff"
+            },
+            {
+                "type": "text",
+                "id": "copy_right_text",
+                "label": "Extra text"
+            },
+            {
+                "type":"checkbox",
+                "id": "show_social_icon",
+                "label": "Show social icons",
+                "default": true
+            },
+            {
+                "type":"checkbox",
+                "id": "show_payment_icons",
+                "label": "Show payment icons",
+                "default": true
+            },
+            {
+                "type": "link_list",
+                "id": "link_list_low",
+                "label": "Second menu"
+            }
+        ],
+       
+        "blocks": [
+            {
+                "type":"navigation",
+                "name":"Navigation",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading"
+                    },
+                    {
+                        "type": "link_list",
+                        "id": "link_list",
+                        "label": "Menu"
+                    }
+                ]
+            },
+            {
+                "type":"text",
+                "name":"Text",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading"
+                    },
+                    {
+                        "type": "richtext",
+                        "id": "text",
+                        "label": "Text"
+                    }
+                ]
+            },
+            {
+                "type":"newsletter",
+                "name":"Newsletter",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading"
+                    },
+                    {
+                        "type": "text",
+                        "id": "sub_text",
+                        "label": "Sub text" 
+                    }
+                ]
+            },
+            {
+                "type":"image",
+                "name":"Image",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image" 
+                    }
+                ]
+            }
+
+        ]
+} 
+    {% endschema %}
+
+{%  style  %}
+    :root {    
+      --footer-bg-color: {{ section.settings.footer_bg_color }};
+      --footer-text-color: {{ section.settings.footer_text_color}};
+    }
+{% endstyle %} 

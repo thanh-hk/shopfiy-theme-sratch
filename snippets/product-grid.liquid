@@ -1,0 +1,66 @@
+<div class="product-item z-0" >
+    {%  assign  price = product.selected_or_first_available_variant.price %} 
+    {%  assign  compare-price = product.selected_or_first_available_variant.compare_at_price %}
+    {%- assign savings = compare-price | minus: price | times: 100.0 | divided_by: compare-price | round | append: '%' -%}
+    
+    <a href="{{ product.url }}" >        
+        <div class="mb-3 group cursor-pointer relative">
+            {% if  product.metafields.custom.new_arrival %}
+                <div class="absolute top-3 left-3 py-1 px-4 bg-white text-black border border-[--border-color] rounded-[--border-overlay_radius] text-xs">{{ 'products.product.new_arrival_label' | t }}</div>
+            {% endif %}
+            
+            <div class="text-[10px] product-grid-save-label absolute left-3 bottom-3 {% unless compare-price > price %} hidden {% endunless %} bg-[--sale-label-bg] text-[--sale-label-text] text-xs 
+                {% if request.page_type == 'product' %} text-[10px] {% endif %} p-2 rounded-[--border-overlay_radius] z-20">{{ savings }}
+            </div> 
+            <div class="overflow-hidden">
+            <img src="{{ product.featured_image | image_url: width :400 }}" class="object-center transition-all main-img {% if section.settings.show-second-image %}{% if product.images.size > 1 %} group-hover:hidden {% endif %}{% endif %}"
+                alt="{{ product.featured_image.alt | escape }}"> 
+            </div>
+                
+               
+           
+            {% if section.settings.show-second-image %}  
+                {% if product.images.size > 1 %}
+                    <img src="{{ product.images[1] | image_url: width :400 }}" class="object-center hidden transition-all group-hover:block"  alt="{{ product.images[1].alt | escape }}" /> 
+                {% endif %}
+            {% endif %}                                          
+        </div>  
+            <div class="flex flex-col gap-2">
+                <div class="hover:underline text-sm">{{- product.title | escape}}</div>
+                <div class=" flex gap-4 items-center"> 
+                                      
+                    <div class="product-price font-medium text-xl">{{ price | money}}</div> 
+                    <div class="product-compare-price text-[--border-color] text-sm line-through
+                    {% unless compare-price > price %} hidden {% endunless %}" >{{compare-price  | money  }}</div>  
+                                   
+                </div>
+            </div>
+    </a>
+    {% if section.settings.show-quick-buy %}
+        {% form 'product', product, class:'shopify-product-form'  %}
+            <select name="id" class="product-grid-select w-full text-sm {% if product.has_only_default_variant %} hidden md:block md:opacity-0 {% endif %} border border-[--border-color] p-2">                   
+                {% for variant in product.variants %}
+                    {% if variant.available %}
+                        <option value="{{ variant.id }}" data-price="{{ variant.price  }}" data-compareprice = "{{ variant.compare_at_price  }}" data-src="{{ variant.featured_image |  image_url  }}">{{ variant.title }} </option> 
+                        {% else %}
+                        <option disabled="disabled">{{ variant.title  }}</option>
+                        {% endif %}  
+                {% endfor %} 
+            </select> 
+            <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="add to cart" 
+                class="w-full p-2 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3" id="add-to-cart">
+                    {% if product.selected_or_first_available_variant.available %}
+                        {{- 'products.product.add_to_cart' | t -}}
+                    {% else %}
+                        {{- 'products.product.buy_it_now' | t -}}
+                    {% endif %}
+            </button>  
+        {% endform %}
+    {% endif %}     
+</div> 
+
+
+            
+           
+       
+   

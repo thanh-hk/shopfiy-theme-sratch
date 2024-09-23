@@ -1,0 +1,195 @@
+[
+  {
+    "name": "General",
+    "settings":[
+      {
+        "type": "range",
+        "id": "top_bottom_padding",
+        "label": "Section padding top bottom",
+        "min": 30,
+        "max": 80,
+        "step": 1,
+        "unit": "px",
+        "default": 30
+      },
+      {
+        "type": "range",
+        "id": "border-overlay_radius",
+        "label": "Overlay radius",
+        "min": 5,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+      }
+    ]
+  },
+  {
+    "name":"Social link",
+    "settings": [
+      {
+        "type": "url",
+        "id": "linkedin",
+        "label": "LinkedIn"
+      },
+      {
+        "type": "url",
+        "id": "facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "instagram",
+        "label": "Instagram"
+      }
+    ]
+  },
+  
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary color", 
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "link_hover_color", 
+        "label": "Link hover color",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "border_color",
+        "label": "Border color",
+        "default": "#ddd"
+      },
+      {
+        "type": "color",
+        "id": "light_gray_color",
+        "label" : "Light gray color",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "sale_label_bg",
+        "label" : "Sale background color",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "sale_label_text",
+        "label" : "Sale text color",
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "text_on_ovelay",
+        "label" : "Text on overlay",
+        "default": "#FFF"
+      }
+    ]
+  },
+
+  {
+    "name": "Typography",
+    "settings": [
+      
+      {
+        "type": "header",
+        "content": "Body text"
+      },
+      {
+        "type": "font_picker",
+        "id": "text_font",
+        "label": "Font",
+        "info": "Selecting different fonts can affect the speed of your online store. Learn more about [system fonts.](https:\/\/help.shopify.com\/en\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "range",
+        "id": "text_font_size_mobile",
+        "label": "Base size (mobile)",
+        "min": 11,
+        "max": 20,
+        "unit": "px",
+        "step": 1,
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "text_font_size_desktop",
+        "label": "Base size (tablet and desktop)",
+        "min": 11,
+        "max": 20,
+        "unit": "px",
+        "step": 1,
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "heading_font_size",
+        "label": "Heading font size",
+        "min": 24,
+        "max": 40,
+        "unit": "px",
+        "step": 1,
+        "default": 30
+      },
+      {
+        "type": "range",
+        "id": "sub_heading_font_size",
+        "label": "Sub heading font size",
+        "min": 18,
+        "max": 36,
+        "unit": "px",
+        "default": 20
+      }           
+    ]
+  },
+  {
+    "name": "Button",
+    "settings": [
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Border radius",
+        "min": 5,
+        "max": 20,
+        "unit": "px",
+        "default": 5
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type":"checkbox",
+        "id":"enable_freeshipping",
+        "label": "Enable free shipping",
+        "default": true
+      },
+      {
+        "type":"checkbox",
+        "id":"show_properties",
+        "label": "Enable Engraving text",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_amounts",
+        "label": "Amounts",
+        "default": "300"
+      }
+    ]
+  }
+]

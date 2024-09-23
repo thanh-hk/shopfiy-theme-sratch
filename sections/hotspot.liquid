@@ -1,0 +1,282 @@
+
+
+{% style %}
+    {%- for block in section.blocks -%}
+        .section-id-{{ section.id }} .hotspot--{{ forloop.index }} {
+            --hot_spot_vertical_desktop: {{ block.settings.hot_spot_y}}%;
+            --hot_spot_horizontal_desktop: {{ block.settings.hot_spot_x }}%;
+        }    
+        .section-id-{{ section.id }} .hotspot-mobile--{{ forloop.index }} {
+            --hot_spot_vertical_mobile: {{ block.settings.hot_spot_y_mobile }}%;
+            --hot_spot_horizontal_mobile: {{ block.settings.hot_spot_x_mobile }}%;
+        }    
+    {% endfor %}
+
+    .section-id-{{ section.id }} .hotspot_image_bg{
+        --hotspot_row_mobile_high: {{ section.settings.hotspot_row_mobile_high }}px;
+        --hotspot_row_desktop_high: {{ section.settings.hotspot_row_desktop_high }}px;
+
+    }
+
+{% endstyle %}
+
+<div class="section-id-{{ section.id }} md:py-[--section-top_bottom_padding] {% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %}">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 gap-6" data-money-format="{{ shop.money_format }}">
+        <div class="hotspot_image_bg col-span-1 md:col-span-3 xl:col-span-4 relative h-[--hotspot_row_mobile_high] md:h-[--hotspot_row_desktop_high] ">
+            <div class="absolute top-0 left-0 w-full h-full after:absolute  after:w-full after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-20">
+                {% if section.settings.image == blank %}
+                    <div class="bg-[#f5f5f5] h-full">
+                    {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}
+                    </div>
+                {% else %}
+                    <img src="{{ section.settings.image |  image_url }}"  class="object-cover object-center w-full h-full {% if section.settings.image_mobile %} hidden md:block {% endif %}" alt="" >
+                {% if section.settings.image_mobile %}
+                    <img src="{{ section.settings.image_mobile |  image_url }}"  class="object-cover object-center w-full h-full md:hidden" alt="">
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="absolute top-0 left-0 w-full h-full">
+                <div class="hotspot-container relative w-full h-full hidden md:block">
+                    {% for block in section.blocks %}
+                        {%  assign product = all_products[block.settings.product] %}                  
+                        <button class="hotspot hotspot--{{ forloop.index }} absolute top-[--hot_spot_vertical_desktop] left-[--hot_spot_horizontal_desktop]" data-tab="{{ forloop.index }}">
+                            <span class="relative flex h-7 w-7">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                                <span class="absolute text-white top-[50%] left-[50%] -translate-x-[50%] translate-y-[-50%] z-10">+</span>
+                                <span class="relative inline-flex rounded-full h-7 w-7 bg-sky-500"></span>
+                            </span>
+                        </button>                                     
+                    {% endfor %}
+                </div> 
+                <div class="hotspotmobile-container relative w-full h-full  md:hidden">
+                    {% for block in section.blocks %}
+                        {%  assign product = all_products[block.settings.product] %}                  
+                        <button class="hotspot-mobile hotspot-mobile--{{ forloop.index }} absolute top-[--hot_spot_vertical_mobile] left-[--hot_spot_horizontal_mobile]" data-tab="{{ forloop.index }}">
+                            <span class="relative flex h-7 w-7">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                                <span class="absolute text-white top-[50%] left-[50%] -translate-x-[50%] translate-y-[-50%] z-10">+</span>
+                                <span class="relative inline-flex rounded-full h-7 w-7 bg-sky-500"></span>
+                            </span>
+                        </button>                                     
+                    {% endfor %}
+                </div>
+                {% for block in section.blocks %}
+                    {%  assign product = all_products[block.settings.product] %}
+                    {% if product != blank %}                                                           
+                        <div class="hotspot-mobile__content--{{ forloop.index }} hotspot-mobile__content transition-all  absolute flex opacity-0 invisible flex-col items-center gap-4 w-full bg-black bg-opacity-60 top-0">                  
+                            <div class="hotspot_image_bg h-[--hotspot_row_mobile_high] flex items-center justify-center"> 
+                                <div class="w-[80%] bg-white p-4 relative z-20">
+                                    <span class="hotspot-mobile__close cursor-pointer absolute bg-white w-[40px] h-[40px] flex justify-center items-center rounded-full -top-3 -right-2 shadow-xl z-20">{%- render 'icon' with 'close' -%}</span>                
+                                    {%- render 'product-grid', product: product -%}
+                                </div>                                   
+                            </div> 
+                        </div>               
+                    {% endif %}
+                {% endfor %}                      
+            </div>           
+        </div>  
+        <div class="col-span-1 relative overflow-hidden hidden md:flex md:items-center">        
+            {% for block in section.blocks %}
+                {%  assign product = all_products[block.settings.product] %}
+                {% if product == blank %}
+                <div class="{% if forloop.index == 1 %}hotspot__content--active{% endif %} hotspot__content hotspot__content--{{ forloop.index }} 
+                    transition-all opacity-0 absolute transform translate-x-[230px] flex flex-col items-center gap-4 w-full">                  
+                    {%- render 'product-grid-blank', i: 1 -%}
+                </div> 
+                   
+                {% else %}
+                    <div class="{% if forloop.index == 1 %}hotspot__content--active{% endif %} hotspot__content hotspot__content--{{ forloop.index }} 
+                        transition-all opacity-0 absolute transform translate-x-[230px] flex flex-col items-center gap-4 w-full">                  
+                        {%- render 'product-grid', product: product -%}
+                    </div>                
+                {% endif %}
+            {% endfor %}
+        </div>   
+    </div>
+</div>
+
+{%  schema  %}  
+    {
+         "name":"Hot spots",
+         "class": "section-hot-spots",
+         "settings": [
+            {
+                "type":"checkbox",
+                "id": "show_border_top",
+                "label": "Show border top",
+                "default": true
+            },
+            {
+                "type" :"image_picker",
+                "id":"image",
+                "label": "Background for desktop"
+            },
+            {
+                "type" :"image_picker",
+                "id":"image_mobile",
+                "label": "Background for mobile"
+            },
+            {
+                "type": "checkbox",
+                "id":"show-quick-buy",
+                "label": "Show quick buy",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id":"show-second-image",
+                "label": "Show second image on hover",
+                "default": true,
+                "info": "Only work with product that has more than 2 images"
+            },
+            {
+                "type": "range",
+                "id": "hotspot_row_mobile_high",
+                "min": 250,
+                "max": 500,
+                "step": 10,
+                "unit": "px",
+                "label": "Mobile banner heights",
+                "default": 400   
+            },
+            {
+                "type": "range",
+                "id": "hotspot_row_desktop_high",
+                "min": 400,
+                "max": 600,
+                "step": 10,
+                "unit": "px",
+                "label": "Desktop banner row heights",
+                "default": 400  
+            }
+         ],
+         "blocks": [
+            {
+                "type": "hotspot",
+                "name": "Hot spot",
+                "settings": [
+                    {
+                        "type": "product",
+                        "id": "product",
+                        "label": "Product"
+                    },
+                    {
+                        "type":"range",
+                        "id": "hot_spot_x",
+                        "min" : 15,
+                        "max" : 85,
+                        "step": 1,
+                        "label":"Horizontal position on desktop",
+                        "default": 15,
+                        "unit": "%",
+    
+                    },
+                    {
+                        "type":"range",
+                        "id": "hot_spot_y",
+                        "min" : 15,
+                        "max" : 85,
+                        "step": 1,
+                        "label":"Vertical position on desktop",
+                        "default": 15,
+                        "unit": "%"
+
+                    },
+                    {
+                        "type":"range",
+                        "id": "hot_spot_x_mobile",
+                        "min" : 15,
+                        "max" : 85,
+                        "step": 1,
+                        "label":"Horizontal position for mobile",
+                        "default": 15,
+                        "unit": "%",
+                    },
+                    {
+                        "type":"range",
+                        "id": "hot_spot_y_mobile",
+                        "min" : 15,
+                        "max" : 85,
+                        "step": 1,
+                        "label":"Vertical position for mobile",
+                        "default": 15,
+                        "unit": "%"
+
+                    }  
+                ]
+            }
+    ],        
+    "presets": [
+        {
+            "name":"Hot spots",
+            "settings": {
+                "hotspot_row_desktop_high":400
+            },
+            "blocks": [
+                {
+                    "type": "hotspot",
+                    "settings": {
+                        "hot_spot_x": 28,
+                        "hot_spot_y": 38,
+                        "hot_spot_x_mobile": 28,
+                        "hot_spot_y_mobile": 38                    
+                    }
+                },
+                {
+                    "type": "hotspot",
+                    "settings": {
+                        "hot_spot_x": 60,
+                        "hot_spot_y": 23,
+                        "hot_spot_x_mobile": 60,
+                        "hot_spot_y_mobile": 23
+                    }
+                },
+                {
+                    "type": "hotspot",
+                    "settings": {
+                        "hot_spot_x": 73,
+                        "hot_spot_y": 54,
+                        "hot_spot_x_mobile": 73,
+                        "hot_spot_y_mobile": 54
+                    }
+                }
+            ]                   
+        }
+    ]       
+}
+{%  endschema  %} 
+
+<script>
+
+    //hotspot on desktop
+    const hotspotContainer = document.querySelector('.hotspot-container');
+    const hotspotProducts = document.querySelectorAll('.hotspot__content');
+    hotspotContainer.addEventListener('click', function(e){
+       const click = e.target.closest('.hotspot');
+       console.log(click.dataset.tab);
+       if(!click) return;
+       hotspotProducts.forEach(hotspot => {
+        hotspot.classList.remove('hotspot__content--active');
+    });
+    document.querySelector(`.hotspot__content--${click.dataset.tab}`).classList.add('hotspot__content--active');
+    });
+
+  //hotspot on mobile
+    const hotspotMobileContainer = document.querySelector('.hotspotmobile-container');
+    const hotspotMobileContents = document.querySelectorAll('.hotspot-mobile__content');
+    hotspotMobileContainer.addEventListener('click',(e) => {
+        const clickMobile = e.target.closest('.hotspot-mobile');
+        console.log(clickMobile.dataset.tab);
+        if(!clickMobile) return;
+       document.querySelector(`.hotspot-mobile__content--${clickMobile.dataset.tab}`).classList.add('show');
+    });
+    
+    document.querySelectorAll('.hotspot-mobile__close').forEach (buttonClose =>{
+        buttonClose.addEventListener('click', ()=>{
+            buttonClose.closest('.hotspot-mobile__content').classList.remove('show');
+        })
+    })
+   
+
+</script>
+{{ 'variant-select.js' |  asset_url |  script_tag }}

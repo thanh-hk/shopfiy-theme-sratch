@@ -1,0 +1,190 @@
+{%  style  %}
+    .section-id-{{ section.id }} .slide,  .section-id-{{ section.id }} .collection-item{
+        --item-per-row: {{ section.settings.items_per_row }};
+    }
+{% endstyle %}
+
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
+    <div class="container px-4 mx-auto">
+        <div class="flex justify-center items-center mb-4">
+            <div class="flex g-5">
+                {% if section.settings.show_carousel %}
+                    {% if section.settings.items_per_row == '20%' and section.blocks.size > 5 %}
+                        <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center ">{%- render 'icon' with 'chevron-left' -%}</button> 
+                    {% elsif section.settings.items_per_row == '25%' and section.blocks.size > 4%}
+                        <button class="hidden md:flex slider__btn--left cursor-pointer w-8 h-8 justify-center items-center ">{%- render 'icon' with 'chevron-left' -%}</button> 
+                    {% endif %}
+                {% endif %}
+                <h2 class="px-5">{{ section.settings.heading }}</h2>
+                {% if section.settings.show_carousel %}
+                    {% if section.settings.items_per_row == '20%' and section.blocks.size > 5 %}
+                        <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center">{%- render 'icon' with 'chevron-right' -%}</button>
+                    {% elsif section.settings.items_per_row == '25%' and section.blocks.size > 4%}
+                        <button class="hidden md:flex slider__btn--right cursor-pointer w-8 h-8 justify-center items-center">{%- render 'icon' with 'chevron-right' -%}</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% if section.settings.show_carousel %} 
+    <div class="slides overflow-auto max-w-[100rem] {% if section.settings.img_per-row-mobile == "1" %} h-[20rem] {% else %} h-[10rem]{% endif %} md:h-[12rem] xl:h-[19rem]
+        relative md:overflow-hidden scroll-smooth">
+    {% endif %}  
+     {% unless section.settings.show_carousel %}<div class="flex flex-wrap"> {% endunless %}
+            {% for block in section.blocks %}
+                {%- assign collection = collections[block.settings.collection] -%}
+                {%- case section.settings.items_per_row -%}
+                    {%- when '20%' -%}
+                        {%- assign items_per_row = 5 -%}
+                    {%- when '25%' -%}
+                        {%- assign items_per_row = 4 -%}
+                    {%- endcase -%}
+                {% if section.settings.show_carousel %}
+                    <div class="slide {% if section.settings.img_per-row-mobile == "1" %}w-[86%] {% else %} w-[46%]{% endif %}  absolute top-0 w-[46%] md:w-[--item-per-row] transition pr-3" style="transform: translateX({{ forloop.index | minus: 1 | times: 100  }}%);">
+                {% endif %}               
+                <a class ="relative overflow-hidden max-h-[288px] group cursor-pointer {% unless section.settings.show_carousel %} collection-item  md:w-[--item-per-row] pr-4 mb-4{% endunless %}" href="{{ collection.url }}">
+                    <div class="relative overflow-hidden max-h-[288px] group {% if section.settings.rounded %} rounded-full {% endif %} cursor-pointer{% if section.settings.rounded %}rounded-full  {% endif %}top-0 left-0 w-full after:absolute  after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-30">
+                        {% if collection == blank %}
+                            <div class="bg-[#f5f5f5] h-full ">
+                                {%- capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture -%}
+                            {{- 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
+                            </div>
+                        {% else %}  
+                            <img src="{{ block.settings.image | default: collection.featured_image |  image_url }}"  class=" object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]">
+                        {% endif %} 
+                    </div>
+                    <div class="absolute top-0 left-0 w-full h-full flex items-center flex-col justify-center text-white text-xl">
+                        {% if  block.settings.sub_heading != blank%}
+                        <span class="text-xs">{{ block.settings.sub_heading }}</span>
+                        {% endif %}
+                        {% if collection == blank %}
+                            <h2>{{ 'collection.general.collection_empty_title'  | t }}</h2>
+                        {% else %}    
+                        <h2>{{ collection.title }}</h2> 
+                        {% endif %}
+                    </div>            
+                    </a>            
+             {% if section.settings.show_carousel %}  </div> {% endif %} 
+            {%- endfor -%}
+        {% unless section.settings.show_carousel %} </div> {% endunless %}
+        {% if section.settings.show_carousel %}</div>{% endif %} 
+    </div>
+</div>
+
+{%  schema  %}  
+    {
+        "name" :"Collection list",
+        "class" :"section-collection-list",
+        "settings": [
+            {
+            "type":"checkbox",
+            "id": "show_border_top",
+            "label": "Show border top",
+            "default": true
+        },
+        {
+            "type":"text",
+            "id":"heading",
+            "label": "Heading",
+            "default": "Collection list"
+        },
+        {
+            "type": "select",
+            "id": "items_per_row",
+            "label": "Products per row on desktop",
+            "options": [
+                {
+                    "label": "4",
+                    "value": "25%"
+                },
+                {
+                    "label": "5",
+                    "value": "20%"
+                }                           
+            ],
+            "default": "20%"
+        },
+            {
+                "type": "checkbox",
+                "id":"rounded",
+                "label": "Rounded image",
+                "default":true
+            },
+            {
+                "type": "checkbox",
+                "id":"show_carousel",
+                "label": "Enable carousel",
+                "default":true
+            },
+            {
+                "type": "select",
+                "id": "img_per-row-mobile",
+                "label": "Images per row - mobile",
+                "options": [
+                    {
+                        "label": "1",
+                        "value": "1"
+                    },
+                    {
+                        "label": "2",
+                        "value": "2"
+                    }                           
+                ],
+                "default": "1"
+            }
+        ],
+        "blocks": [
+            {
+                "type":"collection",
+                "name":"Collection",
+                "settings": [                   
+                    {
+                        "type":"collection",
+                        "id": "collection",
+                        "label": "Collection "
+                    },
+                    
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "type": "text",
+                        "id": "sub_heading",
+                        "label": "Sub heading",
+                        "default": "Sub heading"
+                    }                    
+                ]
+        }
+        ],
+        "presets": [
+            {
+                "name" :"Collection list",
+                "settings": {
+                    "show_carousel" :true,
+                    "items_per_row" : "25%",
+                    "img_per-row-mobile":"1",
+                    "heading":"Collection list"
+                },
+                "blocks": [
+                    {
+                        "type": "collection"
+                    },
+                    {
+                        "type": "collection"
+                    },
+                    {
+                        "type": "collection"
+                    },
+                    {
+                        "type": "collection"
+                    },
+                    {
+                        "type": "collection"
+                    }
+                ]  
+            } 
+        ]
+
+    }
+{%  endschema  %}  

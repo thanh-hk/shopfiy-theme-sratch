@@ -1,0 +1,91 @@
+<div class="section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+    <div class="cart container mx-auto px-4 flex flex-col" data-money-format="{{ shop.money_format }}">
+        <h1 class="text-center">{{ 'cart.general.cart_title' | t}}</h1>
+        {% form 'cart', cart %}
+            {% if cart.empty? %}
+               <div class="flex flex-col items-center">
+                    <p>{{ 'cart.general.cart_empty' | t}}</p>
+                    <div class="flex">
+                        <a href="/" class="w-full p-4 rounded-md flex justify-center items-center text-white bg-[--primary-color] mt-3">{{ 'cart.general.continue_shopping' | t}}</a>
+                    </div>
+               </div>  
+            {% else %}
+            <div class="flex flex-col">
+                <div class="flex justify-center">
+                    {% if settings.enable_freeshipping %}                
+                        {%  render 'free-shipping-bar' %}                     
+                    {% endif %}
+                </div>                                
+                {% for item in cart.items %}
+                    <div class="cart-item flex py-4 border-b border-[--border-color]" data-line-item-key = {{ item.key }}>
+                        <div class="w-[130px] shrink-0 pr-8">
+                            <a href="{{ item.url }}">
+                                <img src="{{ item.image |  image_url: width: 200  }}" class="object-cover object-center w-full h-full" >
+                            </a>                       
+                        </div>
+                        <div class="flex flex-grow flex-wrap">
+                            <div class="flex-grow shrink basis-0 pr-8">
+                                <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                                {% unless item.product.has_only_default_variant %}
+                                    <div class="text-[--light-gray--color] text-xs">{{ item.variant.title }}</div>
+                                {% endunless %}
+                                {% if settings.show_properties %}
+                                    {% for prop in item.properties %}  
+                                        {%  assign  firstChar = prop[0] |  slice: 0   %}  
+                                        <div class="flex gap-4 text-[--light-gray--color] text-xs">
+                                            {%  unless prop[1] == blank or firstChar == '_' %} 
+                                            {{ prop[0] }} : {{ prop[1] }}
+                                        {% endunless %} 
+                                        </div>
+                                    {% endfor %} 
+                                {% endif %}                         
+                            </div>  
+                            <div class="w-[230px] shrink">{{ item.final_price | money }}</div>
+                            <div class="shrink-0 flex flex-col gap-3 items-center cart-item-quanity"> 
+                                <div class="cart-item-selector h-[50px] border border-[--border-color] flex">
+                                    <button type="button" class="minus w-[50px] flex items-center justify-center">{%- render 'icon' with 'minus' -%}</button>
+                                    <input class="w-[50px] text-center" name="updates[]" value="{{ item.quantity }}">
+                                    <button type="button" class="plus w-[50px] flex items-center justify-center">{%- render 'icon' with 'plus' -%}</button>
+                                </div>
+                            </div> 
+                            <div class="flex justify-end w-[150px] gap-4">
+                                <div class="cart_item_price text-end">{{ item.final_line_price | money }}</div>
+                                <a class="remove_item underline" href="{{ item.url_to_remove }}">{%- render 'icon' with 'trash' -%}</a>
+                            </div>                           
+                        </div>
+                    </div>
+                {% endfor %}               
+            </div>
+            <div class="flex py-5 flex-col">
+                <div class="text-2xl flex justify-end">
+                    <div class="flex flex-col">
+                        {% if cart.total_discount > 0 %} 
+                            <div class="cart_total_discount">{{ 'cart.general.cart_total_discount' | t }} {{ cart.total_discounts | money }}</div>
+                        {% endif %} 
+                        <div class="cart_total text-right">{{ 'cart.general.cart_total' | t }} {{ cart.total_price | money }}</div>
+                    </div>
+                </div>
+                <div class="flex justify-end pb-6">
+                    <div class="flex flex-col">
+                        <labe class="mb-3">Gift note:</labe>
+                        <textarea class="border rounded w-[300px] min-h-[100px] border-[--border-color] p-4" name="note" placeholder="{{ 'cart.general.cart_note' | t }}">{{ cart.note }}</textarea>
+                    </div>                
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" name="checkout" class="px-10 py-4 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color]">{{ 'cart.general.checkout' | t}}</button> 
+                </div>
+                                           
+            </div>
+            {% endif %}   
+        {% endform %}  
+    </div>
+</div>
+{%  schema  %}  
+    {
+        "name":"Cart",
+        "class": "section-cart"
+    }
+{% endschema %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>Shopify.money_format = "{{ shop.money_format }}";</script>
+{{ 'cart.js' |  asset_url |  script_tag }}

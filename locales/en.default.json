@@ -1,0 +1,62 @@
+{
+    "general": {
+
+    }, 
+    "search" :{
+        "place_holder" : "Search here...",
+        "no_result":"No result",
+        "result_found":"Here is your result: {{ amount }} are found"
+    },
+    "products": {
+        "facets": {
+            "label":"Filter:",
+            "max_price": "The highest price is {{ price }}",
+            "remove_all": "Remove all",
+            "reset": "Reset",
+            "label_sortby":"Sort by:"
+        },
+
+        "product":{
+            "add_to_cart" : "Add to cart",
+            "buy_it_now" : "Buy it now",
+            "sold_out" : "Sold out",
+            "related_product" :"People also bought", 
+            "new_arrival_label":"New"          
+        },
+        "product_blank":{
+            "title" :"Product title",
+            "vendor" :"Product vendor",
+            "price" :"$99.00"
+        },
+        "labels" :{
+            "sold_out_label" : "Sold out",
+            "saving_label":"Save {{ amount }}"
+        }
+
+    },
+    "collection": {
+        "general": {
+          "view_all": "View all items in collection",
+          "collection_empty_title" : "Collecton"
+        }
+    },
+    "cart":{
+        "general": {
+            "cart_title": "Your cart",
+            "cart_empty" : "Your cart is empty",
+            "cart_total": "Cart total",
+            "checkout": "Checkout",
+            "cart_note":"Cart note",
+            "cart_total_discount":"Total discount: ",
+            "continue_shopping":"Continue shopping",
+            "shipping_value_left_first":"You are",
+            "shipping_value_left_last":" away from free shipping",
+            "free_shipping" : "Free shipping"
+          },
+          "cart_drawer":{
+            "cart_title": "Your cart",
+            "cart_quantity":"items"
+          }
+          
+    }
+}
