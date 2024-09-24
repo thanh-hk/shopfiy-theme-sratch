@@ -6,7 +6,7 @@
             <div class="flex gap-2">
                 <span class="cart-drawer--item-count ">{{ cart.item_count }}</span><span>{{ 'cart.cart_drawer.cart_quantity' | t}}</span>
             </div>          
-            <button type="button" class="drawer-close cursor-pointer transition-all hover:rotate-45">{%- render 'icon' with 'close' -%}</button>
+            <button type="button" class="cart-drawer-close cursor-pointer transition-all hover:rotate-45">{%- render 'icon' with 'close' -%}</button>
           </div>
         </header>
         {% form 'cart', cart, class:'flex flex-col flex-grow shrink' %}

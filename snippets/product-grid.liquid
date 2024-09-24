@@ -13,17 +13,14 @@
                 {% if request.page_type == 'product' %} text-[10px] {% endif %} p-2 rounded-[--border-overlay_radius] z-20">{{ savings }}
             </div> 
             <div class="overflow-hidden">
-            <img lazy-src="{{ product.featured_image | image_url: width :400 }}" class="object-center transition-all main-img {% if section.settings.show-second-image %}{% if product.images.size > 1 %} group-hover:hidden {% endif %}{% endif %}"
-                alt="{{ product.featured_image.alt | escape }}" src="{{  '1x1.jpg' |  asset_url }}"> 
-            </div>
-                
-               
-           
-            {% if section.settings.show-second-image %}  
-                {% if product.images.size > 1 %}
-                    <img lazy-src="{{ product.images[1] | image_url: width :400 }}" class="object-center hidden transition-all group-hover:block"  alt="{{ product.images[1].alt | escape }}" src="{{  '1x1.jpg' |  asset_url }}"/> 
+                <img lazy-src="{{ product.featured_image | image_url: width :400 }}" class="object-center transition-all main-img {% if section.settings.show-second-image %}{% if product.images.size > 1 %} group-hover:hidden {% endif %}{% endif %}"
+                    alt="{{ product.featured_image.alt | escape }}" src="{{  '1x1.jpg' |  asset_url }}"> 
+                {% if section.settings.show-second-image %}  
+                    {% if product.images.size > 1 %}
+                        <img lazy-src="{{ product.images[1] | image_url: width :400 }}" class="object-center hidden transition-all group-hover:block"  alt="{{ product.images[1].alt | escape }}" src="{{  '1x1.jpg' |  asset_url }}"/> 
+                    {% endif %}
                 {% endif %}
-            {% endif %}                                          
+            </div>                                                                  
         </div>  
             <div class="flex flex-col gap-2">
                 <div class="hover:underline text-sm">{{- product.title | escape}}</div>

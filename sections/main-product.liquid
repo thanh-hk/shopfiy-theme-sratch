@@ -7,31 +7,31 @@
                 {% endif %}
                 {% if product.selected_or_first_available_variant.featured_image %}
                     {%  assign  featured =  product.selected_or_first_available_variant.featured_image %} 
-                    <div><img class="product-image border border-[--border-color]" lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}"></div>
+                    <div><img class="product-image border border-[--border-color] w-full h-[300px] xl:h-[400px] xl:p-16 p-10 object-contain" lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}"></div>
                     
                 {% else %}
                 {%  assign  featured =  product.featured_image %} 
-                    <img class="product-image border border-[--border-color]" src=" {{ featured |  image_url  }}">
+                    <img class="product-image border border-[--border-color] w-full h-[300px] xl:h-[400px] xl:p-16 p-10 object-contain" src=" {{ featured |  image_url  }}">
                 {% endif %}
                 {% if section.settings.show_product_thumbs %}
                     <div class="flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
-                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] {% if image == featured %} selected {% endif %}">
-                                <img class="object-center object-cover h-full" src="{{ image |  image_url: master }}" lazyload /> 
+                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
+                                <img class="object-center object-cover h-full " lazy-src="{{ image |  image_url: master }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
                         </div>               
                         {% endfor %}
                     </div>
                 {% else %}
                     <div class="hidden md:grid grid-cols-4 gap-4 mt-4">
                         {% for image in product.images offset: 1%}               
-                        <div class="col-span-2 border border-[--border-color] flex items-center [&:nth-child(3)]:col-span-1 [&:nth-child(4)]:col-span-3 [&:nth-child(5)]:col-span-4">
+                        <div class="col-span-2 border border-[--border-color] flex items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0">
                                 <img class="object-center " lazy-src="{{ image |  image_url }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
                         </div>               
                         {% endfor %}
                     </div>
                     <div class="md:hidden flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
-                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] {% if image == featured %} selected {% endif %}">
+                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
                                 <img class="object-center object-cover h-full " lazy-src="{{ image |  image_url: master }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
                         </div>               
                         {% endfor %}
@@ -299,7 +299,7 @@
     var thumbActive = {{ section.settings.show_product_thumbs }};  
     console.log(product);
     var addToCartText = "{{- 'products.product.add_to_cart' | t -}}";
-    var buyItNowText = "{{- 'products.product.buy_it-now' | t -}}";
+    var buyItNowText = "{{- 'products.product.buy_it_now' | t -}}";
     var soldOutText = "{{- 'products.product.sold_out' | t -}}";
     /*Get variant ID on select type 
     if (document.querySelector('select[name="id"]')){
@@ -413,12 +413,12 @@
             if( matchedVariant.available ) {
                 add.textContent = addToCartText
                 add.disabled = false;
-                buy.textContent = 'Buy it now'
+                buy.textContent = buyItNowText
                 buy.disabled = false;
                 buy.style.display = "block";
                 document.querySelector('.sold-out-label').classList.add('hidden');
             }else{
-                add.textContent = 'Buy it now'
+                add.textContent = soldOutText
                 add.disabled = true; 
                 buy.style.display = "none";
                 buy.disabled = true;

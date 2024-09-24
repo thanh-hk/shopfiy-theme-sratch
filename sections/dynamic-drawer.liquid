@@ -4,7 +4,7 @@
         <header class="flex justify-between p-4 border-b border-[--border-color]">
             <h2 class="flex-grow font-semibold">{{ section.settings.heading }}</h2>
             <div class="flex items-center gap-3">
-                <button type="button" class="drawer-close cursor-pointer transition-all hover:rotate-45">{%- render 'icon' with 'close' -%}</button>
+                <button type="button" class="dynamic-drawer-close cursor-pointer transition-all hover:rotate-45">{%- render 'icon' with 'close' -%}</button>
             </div>
         </header> 
         <div class="flex flex-col flex-grow shrink">
@@ -200,9 +200,14 @@
 <script>  
     document.querySelectorAll('.overlay').forEach( item =>{
     item.addEventListener('click',()=>{
-        console.log('shfkjsdhfjkdsh');
     item.parentElement.classList.remove('drawer--active');
   })
-})
+});
+document.querySelectorAll('.dynamic-drawer-close').forEach( button =>{
+    button.addEventListener('click',()=>{
+    button.closest('.drawer').classList.remove('drawer--active');
+  })
+});
+
 </script>
 

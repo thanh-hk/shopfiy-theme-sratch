@@ -99,10 +99,6 @@ function openDrawer() {
   
 }
 
-function closeDrawer() {
-  document.querySelector('.drawer').classList.remove('drawer--active');  
-}
-
 async function updateCartDrawer(){
   const res = await fetch('/?section_id=cart-drawer');
   const text = await res.text();
@@ -194,7 +190,7 @@ function addCartDrawerListner(){
 
    if (document.querySelector('.drawer-box')){
     document.querySelector('.drawer-box').addEventListener('click',(e)=> {
-      e.stopPropagation(); console.log("thanhrer");
+      e.stopPropagation(); 
     });
    }
  
@@ -223,10 +219,12 @@ document.querySelectorAll('form[action="/cart/add"').forEach(form =>{
 
 addCartDrawerListner();
 
-document.querySelectorAll('.drawer-close, .drawer').forEach( el =>{
-  el.addEventListener('click',()=>{
-    closeDrawer();
-  })
+document.querySelector('.cart-drawer').addEventListener('click',()=>{
+  document.querySelector('.cart-drawer').classList.remove('drawer--active')
+});
+
+document.querySelector('.cart-drawer-close').addEventListener('click',()=>{
+  document.querySelector('.cart-drawer-close').closest('.cart-drawer').classList.remove('drawer--active')
 });
 
 document.querySelectorAll('a[href="/cart"]').forEach( a => {
