@@ -33,7 +33,7 @@
                         <h2 class="mb-1 md:mb-2 uppercase">{{ block.settings.heading  }}</h2>
                     {% endif %}
                     {% if block.settings.image != blank %} 
-                        <img src="{{ block.settings.image |  image_url  }}" alt="shop.name" loading="lazy">                   
+                        <img lazy-src="{{ block.settings.image |  image_url  }}" alt="shop.name" loading="lazy" src="{{  '1x1.jpg' |  asset_url }}">                   
                     {% endif %}  
                 </div>
              {% endcase %}

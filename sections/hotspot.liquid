@@ -29,10 +29,10 @@
                     {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}
                     </div>
                 {% else %}
-                    <img src="{{ section.settings.image |  image_url }}"  class="object-cover object-center w-full h-full {% if section.settings.image_mobile %} hidden md:block {% endif %}" alt="" >
-                {% if section.settings.image_mobile %}
-                    <img src="{{ section.settings.image_mobile |  image_url }}"  class="object-cover object-center w-full h-full md:hidden" alt="">
-                {% endif %}
+                    <img lazy-src="{{ section.settings.image |  image_url }}"  class="object-cover object-center w-full h-full {% if section.settings.image_mobile %} hidden md:block {% endif %}" alt="" src="{{  '1x1.jpg' |  asset_url }}">
+                    {% if section.settings.image_mobile %}
+                        <img lazy-src="{{ section.settings.image_mobile |  image_url }}"  class="object-cover object-center w-full h-full md:hidden" alt="" src="{{  '1x1.jpg' |  asset_url }}">
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="absolute top-0 left-0 w-full h-full">

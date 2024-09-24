@@ -137,7 +137,7 @@
             <div class="hidden"> {{ block.settings.link_name }}</div>                        
             <a href="{{ block.settings.box_link }}" class="flex flex-col items-center justify-center underline">  
               <div class="h-[194px] overflow-hidden">
-                <img src="{{ block.settings.box_image |  image_url }}" alt="{{ site.name }}"></div>                                        
+                <img lazy-src="{{ block.settings.box_image |  image_url }}" alt="{{ site.name }}" src="{{ '1x1.jpg' | asset_url }}"></div>                                        
               <span class="mt-3">{{ block.settings.title}}</span>
             </a>
           </div>                         

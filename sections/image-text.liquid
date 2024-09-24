@@ -14,7 +14,7 @@
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
                             </div>
                         {% else %}  
-                            <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                            <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
                         {% endif %} 
                         </div>                    
                     </div>
@@ -26,7 +26,7 @@
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
                             </div>
                         {% else %}  
-                            <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                            <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
                         {% endif %} 
                         </div>                    
                     </div>
@@ -48,7 +48,7 @@
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}
                             </div>
                         {% else %}  
-                        <img src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" >
+                        <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
                         {% endif %} 
                         </div>                    
                     </div>

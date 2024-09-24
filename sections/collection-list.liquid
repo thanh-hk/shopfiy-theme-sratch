@@ -49,7 +49,7 @@
                             {{- 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
                             </div>
                         {% else %}  
-                            <img src="{{ block.settings.image | default: collection.featured_image |  image_url }}"  class=" object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]">
+                            <img lazy-src="{{ block.settings.image | default: collection.featured_image |  image_url }}"  class=" object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
                         {% endif %} 
                     </div>
                     <div class="absolute top-0 left-0 w-full h-full flex items-center flex-col justify-center text-white text-xl">
