@@ -1,17 +1,20 @@
 <div class="section-id-{{ section.id }}">
     <div class="container mx-auto p-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
             <div class="product-left relative">
                 {% if  product.metafields.custom.new_arrival %}
-                    <div class="absolute border border-[--border-color] top-5 left-5 py-1 px-4 bg-white text-black rounded-[--border-overlay_radius]">{{ 'products.product.new_arrival_label' | t }}</div>
+                    <div class="absolute border border-[--border-color] top-5 left-5 py-1 px-4 bg-white text-black rounded-[--border-overlay_radius] z-10">{{ 'products.product.new_arrival_label' | t }}</div>
                 {% endif %}
                 {% if product.selected_or_first_available_variant.featured_image %}
                     {%  assign  featured =  product.selected_or_first_available_variant.featured_image %} 
-                    <div><img class="product-image border border-[--border-color] w-full h-[300px] xl:h-[400px] xl:p-16 p-10 object-contain" lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}"></div>
-                    
+                <div class="{% if section.settings.show_zoom %}big-img relative overflow-hidden cursor-zoom-in {% endif %}border border-[--border-color] px-[4rem] xl:px-[16rem] md:px-[10rem] py-8">
+                        <img class="product-image {% if section.settings.show_zoom %}display-img {% endif %} w-full  object-contain " lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" srcset="">
+                    </div>   
                 {% else %}
-                {%  assign  featured =  product.featured_image %} 
-                    <img class="product-image border border-[--border-color] w-full h-[300px] xl:h-[400px] xl:p-16 p-10 object-contain" src=" {{ featured |  image_url  }}">
+                    {%  assign  featured =  product.featured_image %} 
+                    <div class="{% if section.settings.show_zoom %}big-img relative overflow-hidden cursor-zoom-in {% endif %} border border-[--border-color] px-[4rem] xl:px-[16rem] md:px-[10rem] py-8">
+                        <img class="product-image {% if section.settings.show_zoom %}display-img {% endif %} w-full object-contain" lazy-src=" {{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}">
+                    </div>
                 {% endif %}
                 {% if section.settings.show_product_thumbs %}
                     <div class="flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
@@ -24,8 +27,8 @@
                 {% else %}
                     <div class="hidden md:grid grid-cols-4 gap-4 mt-4">
                         {% for image in product.images offset: 1%}               
-                        <div class="col-span-2 border border-[--border-color] flex items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0">
-                                <img class="object-center " lazy-src="{{ image |  image_url }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
+                        <div class="col-span-2 border border-[--border-color] flex justify-center items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0  xl:px-24 md:px-[5rem]">
+                                <img class="object-center object-contain " lazy-src="{{ image |  image_url }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
                         </div>               
                         {% endfor %}
                     </div>
@@ -182,15 +185,21 @@
         "class" :"section-product-page",
         "settings": [
             {
-            "type": "checkbox",
-            "id":"show-quick-buy",
-            "label": "Show quick buy",
-            "default": true
+                "type": "checkbox",
+                "id":"show-quick-buy",
+                "label": "Show quick buy",
+                "default": true
             },
             {
                 "type": "checkbox",
                 "id":"show_product_thumbs",
                 "label": "Show product thumbnails",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id":"show_zoom",
+                "label": "Show zoom image",
                 "default": true
             }
         ],
@@ -294,6 +303,7 @@
     }
 {% endschema %}
 {{ 'variant-select.js' |  asset_url |  script_tag }}
+
 <script>
     var product = {{ product | json }}; 
     var thumbActive = {{ section.settings.show_product_thumbs }};  
@@ -462,19 +472,48 @@
     });
     }    
 
+     //image zoom
+    var showZoom = {{ section.settings.show_zoom }};
+    if (showZoom){
+        const zoom = document.querySelector('.big-img').querySelector('.display-img').getAttribute('lazy-src');
+        const image = document.createElement('img');
+        image.classList.add('zoom', 'absolute', 'bg-white', 'opacity-0');
+        image.setAttribute('src',zoom);
+        document.querySelector('.big-img').appendChild(image);
+    }
+    
+
     //img show on thubmails click
     document.querySelectorAll('.product-image-thumbs div').forEach( div => {
         div.addEventListener('click', ()=>{
             document.querySelector('.product-image-thumbs div.selected').classList.remove('selected');
             div.classList.add('selected');
-            document.querySelector('.product-image').setAttribute('src', div.querySelector('img').getAttribute('src'));              
+            document.querySelector('.product-image').setAttribute('src', div.querySelector('img').getAttribute('src')); 
+            if (showZoom){
+                document.querySelector('.big-img .zoom').setAttribute('src', div.querySelector('img').getAttribute('src')); 
+            } 
+                       
         })
-    });   
-
-
-
-
-
-
+    });  
+    if (showZoom){
+        document.querySelectorAll('.big-img').forEach(bigImage => {
+        var zoom = bigImage.querySelector('.zoom');
+        bigImage.addEventListener('mouseenter', ()=>{        
+            bigImage.addEventListener('mousemove',(e)=>{
+                const react = bigImage.getBoundingClientRect();
+                const left = e.clientX - react.left ;
+                const top = e.clientY  - react.top ;
+                zoom.style.opacity = '1';
+                zoom.style.left = -left + 'px';
+                zoom.style.top = -top + 'px';
+            })
+        });
+        bigImage.addEventListener('mouseleave', () =>{
+            zoom.style.opacity = '0';
+                zoom.style.left = 0;
+                zoom.style.top = 0;
+        })
+    })
+    }   
 </script>
 

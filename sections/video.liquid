@@ -1,29 +1,119 @@
-<div class="section-id-{{ section.id }}">
-    {%  assign  link =  section.settings.video_external |  split: '=' | last%} 
-    <iframe width="100%" height="600" class="hidden md:block"
-    src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-    </iframe> 
-    <iframe width="100%" height="300" class="md:hidden"
-    src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-    </iframe> 
+{%  style  %}
+  :root {    
+   --section-mobile-height: {{ section.settings.section_mobile_height }}px;
+   --section-desktop-height: {{ section.settings.section_desktop_height }}px;
+  }
+{% endstyle %} 
 
-   
+<div class="section-id-{{ section.id }} h-[--section-mobile-height] md:h-[--section-desktop-height]">
+    <div class="video-image-overlay relative h-full">
+      <div class="relative top-0 left-0 w-full h-full after:absolute md:overflow-hidden after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-30">
+          {% if section.settings.video_shopify and section.settings.video_external != blank %}
+            {{ section.settings.video_shopify | video_tag: playsinline: true, autoplay: true, muted: true, loop: true, poster: '', class:'object-cover h-full w-full' }}
+          {% endif %}      
+          {% if section.settings.video_shopify == blank and section.settings.video_external != blank %}
+            {%  assign  link =  section.settings.video_external |  split: '=' | last%} 
+            <iframe width="100%" height="100%"
+            src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe> 
+          {% endif %}
+      </div>
+      <div class="absolute top-0 left-0 w-full h-full">
+        <div class="container h-full mx-auto">
+          <div class="flex items-center justify-center text-white flex-col h-full gap2 md:gap-4">
+          {% for block in section.blocks %}
+            {% case block.type %} 
+              {% when 'heading' %}
+                <h1>{{ block.settings.title }}</h1>
+              {% when 'text' %}
+                  <div>{{ block.settings.text }}</div>
+              {% when 'link' %}
+                 <a href="{{ block.settings.link }}" class="py-2 px-5 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color]">{{  block.settings.link_name }}</a>
+            {% endcase %}
+            {% endfor %}  
+          </div>        
+        </div>
+      </div>
+    </div> 
 </div>
-
 {%  schema  %}
     {
       "name":"Video",
       "class": "section-video", 
       "settings": [
         {
-            "id": "video_external",
+                "type": "range",
+                "id": "section_mobile_height",
+                "min": 250,
+                "max": 600,
+                "step": 10,
+                "unit": "px",
+                "label": "Mobile fixed height",
+                "default": 350   
+            },
+            {
+                "type": "range",
+                "id": "section_desktop_height",
+                "min": 400,
+                "max": 800,
+                "step": 10,
+                "unit": "px",
+                "label": "Desktop fixed height",
+                "default": 400  
+            },
+          {
+            "id": "video_shopify",
+            "type": "video",
+            "label": "Video upload",
+            "info": "Hosted by Shopify. Replaces External video if both are set."
+          },
+          {
+              "id": "video_external",
+              "type": "text",
+              "label": "External video",
+              "info": "Supports YouTube and Vimeo. Landscape videos with a 16:9 aspect ratio recommended."
+          }
+      ],
+      "blocks": [
+        {
+            "type": "heading",
+            "name": "Heading",
+            "settings": [
+                {   
+                    "type": "text",
+                    "id":"title",
+                    "label":"Heading"
+                }
+            ]          
+        },
+        {
             "type": "text",
-            "label": "External video",
-            "info": "Supports YouTube and Vimeo. Landscape videos with a 16:9 aspect ratio recommended."
-
+            "name": "Text",
+            "settings": [
+                {   
+                    "type": "richtext",
+                    "id":"text",
+                    "label":"Text"
+                }
+            ]          
+        },
+        {
+            "type": "link",
+            "name": "Link",
+            "settings": [
+              {   
+                    "type": "text",
+                    "id":"link_name",
+                    "label":"Link name"
+                },
+                {   
+                    "type": "url",
+                    "id":"link",
+                    "label":"Link"
+                }               
+            ]          
         }
-      ]
-    ,
+      ],
       "presets": [
         {
             "name":"Video"

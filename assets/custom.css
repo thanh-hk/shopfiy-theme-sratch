@@ -4,11 +4,6 @@ body{
   font-style: var(--text-font-style);
   font-size: var(--text-font-desktop-size);
 }
-.placeholder-svg {
-  fill: #9f9f9f;
-}
-
-
 h1 {
   font-size: var(--heading-font-size);
 }
@@ -20,6 +15,11 @@ h2 {
     font-size: var(--text-font-mobile-size);
   }
 }
+
+.placeholder-svg {
+  fill: #9f9f9f;
+}
+
 .filter-active .filter-mobile, .filter-active .filter-mobile-overlay,
 .menu-mobile-drawer--active .menu-mobile-drawer, .menu-mobile-drawer--active .menu-mobile-overlay, .drawer_active{
   left: 0;
@@ -105,5 +105,7 @@ details > summary::-webkit-details-marker {
   visibility: visible;
 }
 
-
+.zoom {
+  transition: width 0.2s ease-out, opacity 0.2s ease-out 0.2s;
+}
 

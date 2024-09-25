@@ -21,8 +21,7 @@
                             <div class="flex justify-between border-b border-[--border-color] pb-3">
                                 <span>{{ block.settings.title }}</span>
                                 <span>{{ block.settings.value }}</span>
-                            </div>
-                                
+                            </div>                               
                         </div>
                     {% when 'page' %}
                         <div  class="px-4 pt-4">
@@ -85,21 +84,18 @@
         {
             "type":"contact",
             "name":"Contact"
-
         },
         {
             "type":"image",
             "name":"Image",
             "settings": [
-                {
-                    
+                {                   
                     "type": "image_picker",
                     "id": "image",
                     "label": "Image",
                     "info": "280 x 80px .png recommended"                  
                 }
             ]
-
         },
         {
             "type": "text",

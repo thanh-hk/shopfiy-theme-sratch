@@ -79,14 +79,13 @@
             {% for block in section.blocks %}
                 {%  assign product = all_products[block.settings.product] %}
                 {% if product == blank %}
-                <div class="{% if forloop.index == 1 %}hotspot__content--active{% endif %} hotspot__content hotspot__content--{{ forloop.index }} 
-                    transition-all opacity-0 absolute transform translate-x-[230px] flex flex-col items-center gap-4 w-full">                  
-                    {%- render 'product-grid-blank', i: 1 -%}
-                </div> 
-                   
-                {% else %}
                     <div class="{% if forloop.index == 1 %}hotspot__content--active{% endif %} hotspot__content hotspot__content--{{ forloop.index }} 
                         transition-all opacity-0 absolute transform translate-x-[230px] flex flex-col items-center gap-4 w-full">                  
+                        {%- render 'product-grid-blank', i: 1 -%}
+                    </div>                   
+                {% else %}
+                    <div class="{% if forloop.index == 1 %}hotspot__content--active{% endif %} hotspot__content hotspot__content--{{ forloop.index }} 
+                         transition-all opacity-0 absolute transform translate-x-[230px] flex flex-col items-center gap-4 w-full">                  
                         {%- render 'product-grid', product: product -%}
                     </div>                
                 {% endif %}
