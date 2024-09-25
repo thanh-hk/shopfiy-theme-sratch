@@ -65,7 +65,7 @@
                     {% if product != blank %}                                                           
                         <div class="hotspot-mobile__content--{{ forloop.index }} hotspot-mobile__content transition-all  absolute flex opacity-0 invisible flex-col items-center gap-4 w-full bg-black bg-opacity-60 top-0">                  
                             <div class="hotspot_image_bg h-[--hotspot_row_mobile_high] flex items-center justify-center"> 
-                                <div class="w-[80%] bg-white p-4 relative z-20">
+                                <div class="w-[70%] bg-white p-4 relative z-20">
                                     <span class="hotspot-mobile__close cursor-pointer absolute bg-white w-[40px] h-[40px] flex justify-center items-center rounded-full -top-3 -right-2 shadow-xl z-20">{%- render 'icon' with 'close' -%}</span>                
                                     {%- render 'product-grid', product: product -%}
                                 </div>                                   

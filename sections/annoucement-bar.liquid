@@ -1,0 +1,105 @@
+{%  style  %}
+    .section-id-{{ section.id }} {    
+        --accouncement-bg-color: {{ section.settings.accouncement_bg_color }};
+        --accouncement-text-color: {{ section.settings.accouncement_text_color }};
+    }
+{% endstyle %} 
+
+<div class="section-id-{{ section.id }} bg-[--accouncement-bg-color]">
+    <div class="container text-[--accouncement-text-color] py-3 text-sm flex justify-between mx-auto">
+        {% if section.settings.show_social_icon %}
+            <div class="hidden md:block">
+            {% render 'social-links', icon_height: 20 %}
+            </div>
+        {% endif %}  
+        <div class="relative mx-auto">
+            {% for block in section.blocks %}
+                <div class="announcement flex items-center min-h-[1.4rem] w-full">
+                    <div class="announcement__text grow-0 shrink-0 basis-full leading-5">{{ block.settings.title }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if section.settings.secondary_menu != blank %}
+            <div class="gap-5 hidden md:flex">
+                {% for link in linklists[section.settings.secondary_menu].links %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {% endfor %}
+            </div>
+        {% endif %} 
+    </div>
+</div>
+
+{%  schema  %}
+    {
+      "name":"Annoucement bar",
+      "class": "section-annoucement",
+      "settings": [
+        {
+            "type": "color",
+            "id":"accouncement_bg_color",
+            "label":"Annoucement bar background",
+            "default": "#000"
+        },
+        {
+            "type": "color",
+            "id":"accouncement_text_color",
+            "label":"Annoucement text",
+            "default": "#fff"
+        },
+        {
+            "type":"checkbox",
+            "id": "show_social_icon",
+            "label": "Show social icons",
+            "default": true
+        },
+        {
+            "type":"link_list",
+            "id": "secondary_menu",
+            "label": "Secondary menu"
+        }
+      ],
+      "blocks": [
+            {
+                "type": "annoucement",
+                "name": "Annoucement",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Announcement text",
+                        "default": "365 dages returret"  
+                    }
+                ]
+            }
+        ],
+      "presets": [
+      {
+        "name":"Announcement bar"
+      }
+    ]
+    }
+{%  endschema  %}
+
+<script>
+    const annoucementBars = document.querySelectorAll('.announcement');
+    let curAnnoucement = 0;
+    const maxAnnoucement = annoucementBars.length;
+    const goToAnnoucementBar = function(annoucement){
+        annoucementBars.forEach((a,i)=>{
+            if (i !== curAnnoucement){
+                a.classList.add('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
+            }else{
+                a.classList.remove('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
+            }
+        })
+    }
+    goToAnnoucementBar(0);
+    setInterval(function(){
+        if (curAnnoucement === maxAnnoucement - 1){
+            curAnnoucement = 0;
+        } else{
+            curAnnoucement++;
+        }
+        goToAnnoucementBar(curAnnoucement);
+    }, 3000)
+</script>

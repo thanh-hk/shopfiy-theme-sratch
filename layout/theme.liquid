@@ -25,7 +25,8 @@
 
     {%- if request.page_type != 'cart'-%} 
         {%  section 'cart-drawer' %}
-    {% endif %}  
+    {% endif %} 
+    {%  section 'annoucement-bar' %} 
     {%  section 'header' %} 
     {{ content_for_layout }}
     {%  section 'footer' %} 

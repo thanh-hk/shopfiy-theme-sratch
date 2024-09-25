@@ -443,7 +443,6 @@
         e.preventDefault();
         var form = document.querySelector('.shopify-product-form');
         //<input type="hidden" name="return_to" value="/checkout/">
-
         var input = document.createElement('input');
         input.value = "/checkout/";
         input.name ="return_to";
@@ -491,10 +490,10 @@
             document.querySelector('.product-image').setAttribute('src', div.querySelector('img').getAttribute('src')); 
             if (showZoom){
                 document.querySelector('.big-img .zoom').setAttribute('src', div.querySelector('img').getAttribute('src')); 
-            } 
-                       
+            }                        
         })
     });  
+    
     if (showZoom){
         document.querySelectorAll('.big-img').forEach(bigImage => {
         var zoom = bigImage.querySelector('.zoom');

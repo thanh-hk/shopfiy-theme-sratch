@@ -8,8 +8,8 @@
 <div class="section-id-{{ section.id }} h-[--section-mobile-height] md:h-[--section-desktop-height]">
     <div class="video-image-overlay relative h-full">
       <div class="relative top-0 left-0 w-full h-full after:absolute md:overflow-hidden after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-30">
-          {% if section.settings.video_shopify and section.settings.video_external != blank %}
-            {{ section.settings.video_shopify | video_tag: playsinline: true, autoplay: true, muted: true, loop: true, poster: '', class:'object-cover h-full w-full' }}
+          {% if section.settings.video_shopify != blank and section.settings.video_external != blank %}
+            {{ section.settings.video_shopify | video_tag: playsinline: true, autoplay: true, muted: true, loop: true, poster: '', class:'object-cover h-full w-full' | replace: '<img ', '<img loading="lazy" hidden '}}
           {% endif %}      
           {% if section.settings.video_shopify == blank and section.settings.video_external != blank %}
             {%  assign  link =  section.settings.video_external |  split: '=' | last%} 
@@ -17,6 +17,7 @@
             src="https://www.youtube.com/embed/{{link}}?playlist=ihSH7Q2erm4&autoplay=1&loop=1&autopause=0&muted=1" allow="autoplay" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
             </iframe> 
           {% endif %}
+         
       </div>
       <div class="absolute top-0 left-0 w-full h-full">
         <div class="container h-full mx-auto">
@@ -72,6 +73,8 @@
               "type": "text",
               "label": "External video",
               "info": "Supports YouTube and Vimeo. Landscape videos with a 16:9 aspect ratio recommended."
+             
+          
           }
       ],
       "blocks": [
@@ -82,7 +85,8 @@
                 {   
                     "type": "text",
                     "id":"title",
-                    "label":"Heading"
+                    "label":"Heading",
+                    "default":"Background video"
                 }
             ]          
         },
@@ -93,7 +97,8 @@
                 {   
                     "type": "richtext",
                     "id":"text",
-                    "label":"Text"
+                    "label":"Text",
+                    "default": "<p>Use a video to get a customer's attention</p>"
                 }
             ]          
         },
@@ -104,7 +109,8 @@
               {   
                     "type": "text",
                     "id":"link_name",
-                    "label":"Link name"
+                    "label":"Link name",
+                    "default": "Shop now"
                 },
                 {   
                     "type": "url",
@@ -116,8 +122,24 @@
       ],
       "presets": [
         {
-            "name":"Video"
-            }]
+            "name":"Video",
+            "settings": {
+              "section_desktop_height":500,
+              "section_mobile_height" :300
+            },
+            "blocks": [
+            {
+              "type": "heading"
+            },
+            {
+              "type": "text"
+            },
+            {
+              "type": "link"
+            }
+          ]
+        }
+      ]
 }
 {%  endschema  %}
 <script>
