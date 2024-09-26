@@ -13,10 +13,10 @@
                         <div class="relative h-[--row_mobile_high] md:h-[--row_desktop_high] {% if section.settings.img_per-row-mobile == "1" %} basis-full {% else %}  basis-[47%] {% endif %} grow-0 shrink-0 md:grow overflow-hidden
                             {% if section.settings.img_per-row-desktop == 2 %} md:first:grow-[3] md:basis-[34%] {% elsif section.settings.img_per-row-desktop == 3 %} md:first:grow-[4] md:basis-[26%] {% else %}md:first:grow-[5] md:basis-[21%]{% endif %}">
                             <div class="absolute top-0 left-0 w-full h-full before:absolute  before:w-full before:h-full before:bg-black before:bottom-0 before:left-0 before:right-0 before:top-0 before:opacity-20">
-                                {% if block.settings.box_image == blank %}
+                                {% if block.settings.image == blank %}
                                     {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full absolute top-0 left-0' -}}
-                                {% else %}  
-                                    {%- render 'image', image:block.settings.box_image -%}
+                                {% else %}                                
+                                    {%- render 'image', image:block.settings.image -%}
                                 {% endif %}   
                             </div>
                             <div class="absolute text-[--text_on_ovelay] top-0 left-0 w-full h-full flex flex-col text-{{ block.settings.text_align}} items-{{ block.settings.layout_align_vertical }} justify-{{ block.settings.layout_align_horizontal }} p-5">              
@@ -40,12 +40,12 @@
             <div class="cursor-pointer group relative h-[--row_mobile_high] md:h-[--row_desktop_high] {% if section.settings.img_per-row-mobile == "1" %} basis-full {% else %}  basis-[47%] {% endif %} grow-0 shrink-0 md:grow overflow-hidden
                 {% if section.settings.img_per-row-desktop == 2 %} md:first:grow-[3] md:basis-[34%] {% elsif section.settings.img_per-row-desktop == 3 %} md:first:grow-[4] md:basis-[26%] {% else %}md:first:grow-[5] md:basis-[21%]{% endif %}">
                 <div class="media-item transition-all group-hover:scale-[1.06]  absolute top-0 left-0 w-full h-full after:absolute  after:w-full after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-20" {{ block.shopify_attributes }}>
-                    {% if block.settings.box_image == blank %}
+                    {% if block.settings.image == blank %}
                         <div class="bg-[#f5f5f5] h-full">
                             {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full absolute top-0 left-0' -}}
                         </div>
                     {% else %}  
-                    {%- render 'image', image:block.settings.box_image -%}
+                    {%- render 'image', image:block.settings.image -%}
                     {% endif %}   
                 </div>
                 <div class="media-item absolute text-[--text_on_ovelay] top-0 left-0 w-full h-full flex flex-col text-{{ block.settings.text_align}} items-{{ block.settings.layout_align_vertical }} justify-{{ block.settings.layout_align_horizontal }} p-5">              
@@ -64,7 +64,7 @@
 </div>
 {%  schema  %}  
     {
-        "name" :"Media grid",
+        "name" :"Media grid 2",
         "class" :"section-media-grid py-4",
         "settings": [
             {
@@ -132,7 +132,7 @@
                 "settings": [
                     {
                         "type": "image_picker",
-                        "id": "box_image",
+                        "id": "image",
                         "label": "Image",
                         "info": "280 x 80px .png recommended"  
                     },
@@ -218,7 +218,7 @@
     ],
     "presets": [
         {
-            "name":"Media grid",
+            "name":"Media grid 2",
             "settings": {
                 "img_per-row-desktop":3,
                 "row_desktop_high": 420

@@ -43,13 +43,16 @@
                 {% endif %}               
                 <a class ="relative overflow-hidden max-h-[288px] group cursor-pointer {% unless section.settings.show_carousel %} collection-item  md:w-[--item-per-row] pr-4 mb-4{% endunless %}" href="{{ collection.url }}">
                     <div class="relative overflow-hidden max-h-[288px] group {% if section.settings.rounded %} rounded-full {% endif %} cursor-pointer{% if section.settings.rounded %}rounded-full  {% endif %}top-0 left-0 w-full after:absolute  after:h-full after:bg-black after:bottom-0 after:left-0 after:right-0 after:top-0 after:opacity-30">
-                        {% if collection == blank %}
+                        {% if collection == blank and block.settings.image == blank%}
                             <div class="bg-[#f5f5f5] h-full ">
                                 {%- capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture -%}
                             {{- 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
                             </div>
                         {% else %}  
-                            <img lazy-src="{{ block.settings.image | default: collection.featured_image |  image_url }}"  class=" object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
+                            <div class="transition-all group-hover:scale-[1.06]">
+                                {%- render 'image', image:block.settings.image -%}
+                                                          
+                            </div>
                         {% endif %} 
                     </div>
                     <div class="absolute top-0 left-0 w-full h-full flex items-center flex-col justify-center text-white text-xl">
@@ -90,7 +93,7 @@
         {
             "type": "select",
             "id": "items_per_row",
-            "label": "Products per row on desktop",
+            "label": "Collection per row on desktop",
             "options": [
                 {
                     "label": "4",

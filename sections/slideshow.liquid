@@ -16,8 +16,12 @@
                     {{- 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
                     </div>
                 {% else %}  
-                    <img lazy-src="{{ block.settings.image |  image_url }}"  class="object-cover object-center w-full h-full hidden md:block" src="{{  '1x1.jpg' |  asset_url }}">
-                    <img lazy-src="{{ block.settings.image_mobile |  image_url }}"  class="object-cover object-center w-full h-full md:hidden" src="{{  '1x1.jpg' |  asset_url }}">
+                    <div class="hidden md:block h-full">
+                        {%- render 'image', image:block.settings.image -%}
+                    </div>
+                    <div class="md:hidden h-full">
+                        {%- render 'image', image:block.settings.image_mobile -%}   
+                    </div>               
                 {% endif %}
             </div>
             <div class="absolute top-0 left-0 w-full h-full">

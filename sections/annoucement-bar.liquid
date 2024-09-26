@@ -6,7 +6,7 @@
 {% endstyle %} 
 
 <div class="section-id-{{ section.id }} bg-[--accouncement-bg-color]">
-    <div class="container text-[--accouncement-text-color] py-3 text-sm flex justify-between mx-auto">
+    <div class="container text-[--accouncement-text-color] p-4 text-sm flex justify-between mx-auto">
         {% if section.settings.show_social_icon %}
             <div class="hidden md:block">
             {% render 'social-links', icon_height: 20 %}
@@ -14,7 +14,7 @@
         {% endif %}  
         <div class="relative mx-auto">
             {% for block in section.blocks %}
-                <div class="announcement flex items-center min-h-[1.4rem] w-full">
+                <div class="announcement flex items-center min-h-[1.4rem] w-full min-w-[300px] text-center"  {{ block.shopify_attributes }}>
                     <div class="announcement__text grow-0 shrink-0 basis-full leading-5">{{ block.settings.title }}</div>
                 </div>
             {% endfor %}
@@ -49,8 +49,18 @@
         {
             "type":"checkbox",
             "id": "show_social_icon",
-            "label": "Show social icons",
+            "label": "Show social media links",
             "default": true
+        },
+        {
+          "type":"range",
+          "id": "delay_time",
+          "min" : 2,
+          "max" : 7,
+          "step": 1,
+          "unit": "s",
+          "label":"Change annoucement every",
+          "default": 3
         },
         {
             "type":"link_list",
@@ -81,25 +91,33 @@
 {%  endschema  %}
 
 <script>
-    const annoucementBars = document.querySelectorAll('.announcement');
-    let curAnnoucement = 0;
-    const maxAnnoucement = annoucementBars.length;
-    const goToAnnoucementBar = function(annoucement){
-        annoucementBars.forEach((a,i)=>{
-            if (i !== curAnnoucement){
-                a.classList.add('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
-            }else{
-                a.classList.remove('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
-            }
-        })
-    }
-    goToAnnoucementBar(0);
-    setInterval(function(){
-        if (curAnnoucement === maxAnnoucement - 1){
-            curAnnoucement = 0;
-        } else{
-            curAnnoucement++;
-        }
-        goToAnnoucementBar(curAnnoucement);
-    }, 3000)
+
+  document.addEventListener('shopify:section:load', function() {
+  const annoucementBars = document.querySelectorAll('.announcement');
+  let curAnnoucement = 0;
+  const maxAnnoucement = annoucementBars.length;
+  const goToAnnoucementBar = function(annoucement){
+      annoucementBars.forEach((a,i)=>{
+          if (i !== curAnnoucement){
+              a.classList.add('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
+          }else{
+              a.classList.remove('announcement--inactive','invisible','absolute','top-0','left-0', 'w-full');
+          }
+      })
+  }
+  goToAnnoucementBar(0);
+  setInterval(function(){
+      if (curAnnoucement === maxAnnoucement - 1){
+          curAnnoucement = 0;
+      } else{
+          curAnnoucement++;
+      }
+      goToAnnoucementBar(curAnnoucement);
+  }, 3000)
+});
+
+document.addEventListener('shopify:section:unload', (event) => {
+  console.log("thanljkl")
+});
+
 </script>

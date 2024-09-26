@@ -45,31 +45,34 @@ var formatMoney = function(cents, format) {
 
 
 /*  Lazy loading images */
-function load(img) {
-  const url = img.getAttribute('lazy-src')
-  img.setAttribute('src', url);
-}
-function ready(){
-  if('IntersectionObserver' in window){
-    var lazyImgs = document.querySelectorAll('img[lazy-src]');
-    
-    let observer = new IntersectionObserver((entries) =>{
-      entries.forEach(entry => {
-        if (entry.isIntersecting){
-          load(entry.target);
-        }
-      })
 
-    });
-     lazyImgs.forEach( img => {
-         observer.observe(img);
-     })
-  }else {
 
+ const loadImage = function(img) {
+    const url = img.getAttribute('lazy-src')
+    img.setAttribute('src', url);
   }
-};
-document.addEventListener('DOMContentLoaded', ready);
-
+  function ready(){
+    if('IntersectionObserver' in window){
+      var lazyImgs = document.querySelectorAll('img[lazy-src]');
+      
+      let observer = new IntersectionObserver((entries) =>{
+        entries.forEach(entry => {
+          if (entry.isIntersecting){
+            loadImage(entry.target);
+          }
+        })
+  
+      });
+       lazyImgs.forEach( img => {
+           observer.observe(img);
+       })
+    }else {
+  
+    }
+  };
+  document.addEventListener('DOMContentLoaded', ready);
+  
+ 
 
 
 /* Filter */
@@ -219,13 +222,18 @@ document.querySelectorAll('form[action="/cart/add"').forEach(form =>{
 
 addCartDrawerListner();
 
-document.querySelector('.cart-drawer').addEventListener('click',()=>{
-  document.querySelector('.cart-drawer').classList.remove('drawer--active')
-});
+if(document.querySelector('.cart-drawer')){
+  document.querySelector('.cart-drawer').addEventListener('click',()=>{
+    document.querySelector('.cart-drawer').classList.remove('drawer--active')
+  });
+  
+}
+if(document.querySelector('.cart-drawer-close')){
+  document.querySelector('.cart-drawer-close').addEventListener('click',()=>{
+    document.querySelector('.cart-drawer-close').closest('.cart-drawer').classList.remove('drawer--active')
+  });
+}
 
-document.querySelector('.cart-drawer-close').addEventListener('click',()=>{
-  document.querySelector('.cart-drawer-close').closest('.cart-drawer').classList.remove('drawer--active')
-});
 
 document.querySelectorAll('a[href="/cart"]').forEach( a => {
   a.addEventListener('click',(e)=>{
@@ -344,7 +352,6 @@ if (document.querySelector('.drawer-box')){
     
   });
  }
-
 
 
 

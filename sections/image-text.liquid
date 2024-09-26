@@ -1,32 +1,39 @@
 
 {%  style  %}
-
+ .section-id-{{ section.id }}.section-image-text{
+        --image-text-mobile-height: {{ section.settings.image_text_mobile_height }}px;
+        --image-text-desktop-height: {{ section.settings.image_text_desktop_height }}px;
+    }
 {% endstyle %} 
-<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
+<div class="section-image-text {% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]"> 
     <div class="container px-4 mx-auto flex flex-col gap-8">
         {% for block in section.blocks %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 min-h-[500px] md:min-h-[300px]">
+            <div class="grid grid-cols-1 md:grid md:grid-cols-2 gap-4 ">
                 {% if block.settings.image_position == 'left' %}
-                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max">
+                    <div class="grid-cols-1 relative group cursor-pointer h-[--image-text-mobile-height] md:h-[--image-text-desktop-height]">
                         <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
                         {% if block.settings.image == blank %}
                             <div class="bg-[#f5f5f5] h-full">
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
                             </div>
-                        {% else %}  
-                            <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
+                        {% else %} 
+                            <div class="transition-all group-hover:scale-[1.06]">
+                                {%- render 'image', image:block.settings.image -%}
+                            </div> 
                         {% endif %} 
                         </div>                    
                     </div>
                 {% else %}
-                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max md:hidden">
+                    <div class="grid-cols-1 relative group cursor-pointer md:hidden h-[--image-text-mobile-height] md:h-[--image-text-desktop-height]">
                         <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
                         {% if block.settings.image == blank %}
                             <div class="bg-[#f5f5f5] h-full">
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
                             </div>
-                        {% else %}  
-                            <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
+                        {% else %} 
+                            <div class="transition-all group-hover:scale-[1.06]">
+                                {%- render 'image', image:block.settings.image -%}
+                            </div> 
                         {% endif %} 
                         </div>                    
                     </div>
@@ -41,14 +48,14 @@
                     {% endif %} 
                 </div>
                 {% if block.settings.image_position == 'right' %}
-                    <div class="grid-cols-1 relative group cursor-pointer min-h-[200px] md:min-h-max hidden md:block">
+                    <div class="grid-cols-1 relative group cursor-pointer h-[--image-text-mobile-height] md:h-[--image-text-desktop-height] hidden md:block">
                         <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
                         {% if block.settings.image == blank %}
                             <div class="bg-[#f5f5f5] h-full">
                                 {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full' -}}
                             </div>
                         {% else %}  
-                        <img lazy-src="{{ block.settings.image |  image_url }}" alt="{{ site.name }}" class="object-cover object-center w-full h-full transition-all group-hover:scale-[1.06]" src="{{  '1x1.jpg' |  asset_url }}">
+                            {%- render 'image', image:block.settings.image -%}
                         {% endif %} 
                         </div>                    
                     </div>
@@ -60,12 +67,31 @@
 {%  schema  %}  
     {
         "name" :"Image with text",
-        "class" :"section-image-text",
         "settings": [
             {
                 "type": "checkbox",
                 "id": "show_border_top",
                 "label": "Show border top"
+            },
+            {
+                "type": "range",
+                "id": "image_text_mobile_height",
+                "min": 200,
+                "max": 500,
+                "step": 10,
+                "unit": "px",
+                "label": "Image height on mobile",
+                "default": 200   
+            },
+            {
+                "type": "range",
+                "id": "image_text_desktop_height",
+                "min": 300,
+                "max": 600,
+                "step": 10,
+                "unit": "px",
+                "label": "Image height on desktop",
+                "default": 300   
             }
         ],
         "blocks": [
