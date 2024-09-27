@@ -21,7 +21,9 @@
             "buy_it_now" : "Buy it now",
             "sold_out" : "Sold out",
             "related_product" :"People also bought", 
-            "new_arrival_label":"New"          
+            "new_arrival_label":"New",
+            "inventory_low_stock_show_count":" in stock",
+            "inventory_out_stock":"Out of stock"       
         },
         "product_blank":{
             "title" :"Product title",
@@ -52,11 +54,15 @@
             "shipping_value_left_first":"You are",
             "shipping_value_left_last":" away from free shipping",
             "free_shipping" : "Free shipping"
-          },
-          "cart_drawer":{
+        },
+        "cart_drawer":{
             "cart_title": "Your cart",
             "cart_quantity":"items"
-          }
-          
+        }         
+    },
+    "blog":{
+        "general": {
+            "blog_read_more":"Readmore"
+        }
     }
 }

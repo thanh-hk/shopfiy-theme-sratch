@@ -27,9 +27,7 @@ h2 {
   transform:  translateX(0); 
 }
 
-.hotspot__content .overflow-hidden, .hotspot-mobile__content .overflow-hidden{
-  padding: 2rem;
-}
+
 .menu-dropdown-active, .show { 
   opacity: 1;
   visibility: visible;

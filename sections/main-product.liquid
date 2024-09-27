@@ -7,8 +7,9 @@
                 {% endif %}
                 {% if product.selected_or_first_available_variant.featured_image %}
                     {%  assign  featured =  product.selected_or_first_available_variant.featured_image %} 
-                <div class="{% if section.settings.show_zoom %}big-img relative overflow-hidden cursor-zoom-in {% endif %}border border-[--border-color] px-[4rem] xl:px-[16rem] md:px-[10rem] py-8">
+                    <div class="{% if section.settings.show_zoom %}big-img relative overflow-hidden cursor-zoom-in {% endif %}border border-[--border-color] px-[4rem] xl:px-[16rem] md:px-[10rem] py-8">
                         <img class="product-image {% if section.settings.show_zoom %}display-img {% endif %} w-full  object-contain " lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" srcset="">
+                            
                     </div>   
                 {% else %}
                     {%  assign  featured =  product.featured_image %} 
@@ -20,23 +21,23 @@
                     <div class="flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
                         <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
-                                <img class="object-center object-cover h-full " lazy-src="{{ image |  image_url: master }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
+                            {%- render 'image', image:image -%}                        
                         </div>               
                         {% endfor %}
                     </div>
                 {% else %}
                     <div class="hidden md:grid grid-cols-4 gap-4 mt-4">
                         {% for image in product.images offset: 1%}               
-                        <div class="col-span-2 border border-[--border-color] flex justify-center items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0  xl:px-24 md:px-[5rem]">
-                                <img class="object-center object-contain " lazy-src="{{ image |  image_url }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
-                        </div>               
+                            <div class="col-span-2 border border-[--border-color] flex justify-center items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0  xl:px-24 md:px-[5rem]">                              
+                                {%- render 'image', image:image -%} 
+                            </div>               
                         {% endfor %}
                     </div>
                     <div class="md:hidden flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
-                        <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
+                            <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
                                 <img class="object-center object-cover h-full " lazy-src="{{ image |  image_url: master }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
-                        </div>               
+                            </div>               
                         {% endfor %}
                     </div>
             {% endif %}       
@@ -45,7 +46,6 @@
                 {% for block in section.blocks %}
                     {% case block.type %}
                         {% when 'product-sku' %}
-                            {% assign current_variant = product.selected_or_first_available_variant %}
                             <div class="product-sku text-[--light-gray--color] text-sm" {{ block.shopify_attributes }}>{{ current_variant.sku }}</div>
                         {% when 'product-title' %}
                             <h1 class="text-2xl" {{ block.shopify_attributes }}>{{ product.title }}</h1>
@@ -69,12 +69,12 @@
                             </div>                                  
                         {% when 'variant' %}
                             <div {{ block.shopify_attributes }}>
-                            {% if block.settings.variant_picker_type == 'dropdown' %}
-                                <select name="id" class=" {% if product.has_only_default_variant %} opacity-0{% endif %} border border-[--border-color]  p-4">                   
-                                    {% for variant in product.variants %}
-                                        <option value="{{ variant.id }}">{{ variant.title }}</option>  
-                                    {% endfor %} 
-                                </select>                        
+                                {% if block.settings.variant_picker_type == 'dropdown' %}
+                                    <select name="id" class=" {% if product.has_only_default_variant %} opacity-0{% endif %} border border-[--border-color]  p-4">                   
+                                        {% for variant in product.variants %}
+                                            <option value="{{ variant.id }}">{{ variant.title }}</option>  
+                                        {% endfor %} 
+                                    </select>                        
                                 {% else %}
                                     {% if product.variants.size > 1 %}
                                         <div class="product-option">
@@ -95,9 +95,32 @@
                                                 {% endfor %}
                                         </div>
                                     {% endif %}
-                            {% endif %}
+                                {% endif %}
                             </div>                          
-                               
+                        
+                        {% when 'inventory' %}
+                            {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}                              
+                                <div class="flex gap-3 items-center">
+                                        <span class="available_dot {% if product.selected_or_first_available_variant.inventory_quantity <= 0 %} hidden{% endif %}">
+                                            <svg width="15" height="15" aria-hidden="true">
+                                                <circle cx="7.5" cy="7.5" r="7.5" fill="rgb(62,214,96, 0.3)"/>
+                                                <circle cx="7.5" cy="7.5" r="5" stroke="rgb(255, 255, 255)" stroke-width="1" fill="rgb(62,214,96)"/>
+                                            </svg>
+                                        </span>                                     
+                                        <span class="unavailable_dot  {% if  product.selected_or_first_available_variant.inventory_quantity > 0 %} hidden{% endif %}">                                          
+                                            <svg width="15" height="15" aria-hidden="true">
+                                                <circle cx="7.5" cy="7.5" r="7.5" fill="rgb(238,148,65, 0.3)"/>
+                                                <circle cx="7.5" cy="7.5" r="5" stroke="rgb(255, 255, 255)" stroke-width="1" fill="rgb(238,148,65)"/>
+                                            </svg>
+                                        </span>                                       
+                                    <div>
+                                        <span class="inventory_quantity">{{ product.selected_or_first_available_variant.inventory_quantity }}</span>{{'products.product.inventory_low_stock_show_count' | t }}
+                                    </div>
+                                </div>                                  
+                            {% endif %}
+                            {% for variant in product.variants %}
+                                <div class="hidden" InventoryManagment data-id="{{variant.id}}" data-inventory="{{variant.inventory_quantity}}" >{{ variant.inventory_quantity}}</div>
+                            {% endfor %}
                         {% when 'buy-button' %}
                             <div {{ block.shopify_attributes }}>
                             {% form 'product', product, class:'shopify-product-form'  %} 
@@ -127,7 +150,7 @@
                                     {% endif %} 
                                     <div class="flex gap-3">
                                         <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="add to cart" 
-                                            class="w-full p-4 rounded-md flex justify-center items-center text-white bg-[--primary-color]" id="add-to-cart">
+                                            class="py-4 overflow-hidden  w-full px-5 z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full" id="add-to-cart">
                                                 {% if product.selected_or_first_available_variant.available %}
                                                     {{- 'products.product.add_to_cart' | t -}}
                                                 {% else %}
@@ -136,7 +159,7 @@
                                         </button> 
                                         {% if block.settings.show_buy_now %}
                                             <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="buy it now" 
-                                                class="w-full p-4 rounded-md flex justify-center items-center text-white bg-[--primary-color]" id="buy-it-now">
+                                                class="py-4 overflow-hidden  px-5 w-full z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full" id="buy-it-now">
                                                     {% if product.selected_or_first_available_variant.available %}
                                                         {{- 'products.product.buy_it_now' | t -}}
                                                     {% else %}
@@ -220,6 +243,10 @@
             {
                 "type":"product-description",
                 "name":"Description"
+            },
+            {
+                "type":"inventory",
+                "name":"Inventory"
             },
            
             {
@@ -311,6 +338,7 @@
     var addToCartText = "{{- 'products.product.add_to_cart' | t -}}";
     var buyItNowText = "{{- 'products.product.buy_it_now' | t -}}";
     var soldOutText = "{{- 'products.product.sold_out' | t -}}";
+    var outOfStock = "{{  'products.product.inventory_out_stock' | t }}"
     /*Get variant ID on select type 
     if (document.querySelector('select[name="id"]')){
         document.querySelector('select[name="id"]').addEventListener('change', (e) => {
@@ -392,6 +420,21 @@
            //change url
             var url = new URLParse(window.location.href, true);              
             url.query.variant = matchedVariant.id;
+            let inventoryHash = document.querySelectorAll('[inventorymanagment]'); 
+            Array.from(inventoryHash).forEach(selectedVariant => {
+                const selectedVariantId = Number(selectedVariant.dataset.id)
+                if (selectedVariantId === matchedVariant.id){   
+                    if (selectedVariant.dataset.inventory > 0){
+                        document.querySelector('.unavailable_dot').classList.add('hidden');
+                        document.querySelector('.available_dot').classList.remove('hidden');
+                    } else{
+                        document.querySelector('.available_dot').classList.add('hidden');
+                        document.querySelector('.unavailable_dot').classList.remove('hidden');
+                    }            
+                    document.querySelector('.inventory_quantity').textContent = selectedVariant.dataset.inventory;                                       
+                }             
+            })
+           
             window.history.replaceState(null, null, url.toString());
            
             //change price
@@ -493,7 +536,7 @@
             }                        
         })
     });  
-    
+
     if (showZoom){
         document.querySelectorAll('.big-img').forEach(bigImage => {
         var zoom = bigImage.querySelector('.zoom');

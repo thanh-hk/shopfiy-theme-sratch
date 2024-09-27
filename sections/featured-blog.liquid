@@ -1,0 +1,82 @@
+<div class="{% if section.settings.show_border_top %} border-t border-[--border-color] {% endif %} section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+    <div class="container  mx-auto px-4 ">
+        {%  assign blog = blogs[section.settings.blogs]  %} 
+        <div class="flex flex-col gap-2 mb-3">
+            {% if section.settings.title != blank %}
+                <h1> {{ section.settings.title }}</h1>            
+            {% else %}
+                <h1> {{ blog.title }} </h1>
+            {% endif %}
+            <div>{{ section.settings.text }}</div>
+        </div>                    
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5"> 
+            {% for article in blog.articles %}
+                {%  render 'article-card', article: article,  %}
+            {% endfor %}
+        </div>
+        {% if section.settings.show_more_link_name != blank %}
+            <div class="flex mt-4 justify-center">
+                <a class="py-2 px-5 overflow-hidden z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] mt-3 relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full" href="{{ section.settings.show_more_link }}">{{ section.settings.show_more_link_name }}</a>
+            </div>
+        {% endif %}
+       
+    </div>
+</div>
+{%  schema  %}  
+    {
+        "name" :"Blogs",
+        "class" :"section-blog ",
+        "settings": [
+            {
+                "type":"checkbox",
+                "id": "show_border_top",
+                "label": "Show border top",
+                "default": true
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Heading",
+                "default": "Blog posts"
+            },
+            {
+                "type": "richtext",
+                "id": "text",
+                "label": "Heading",
+                "default": "<p>Type your text here </p>"
+            },
+            {
+                "type": "blog",
+                "id":"blogs",
+                "label":"Blogs"
+            },
+            {
+                "type": "checkbox",
+                "id":"show_date",
+                "label": "Show date",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id":"show_author",
+                "label": "Show author"
+            },
+            {
+                "type": "text",
+                "id":"show_more_link_name",
+                "label": "Show more link name",
+                "default": "View all posts"
+            },
+            {
+                "type": "url",
+                "id":"show_more_link",
+                "label": "Show more link"
+            }
+        ],
+        "presets": [
+            {
+                "name":"Blogs"
+            }
+        ]
+    }
+{%  endschema  %}  

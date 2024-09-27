@@ -1,37 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HKT shop</title>
-   
-    {{- 'style.css' | asset_url | stylesheet_tag: preload: true -}}
-    {{- 'custom.css' | asset_url | stylesheet_tag: preload: true -}}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HKT shop</title>
+    
+        {{- 'style.css' | asset_url | stylesheet_tag: preload: true -}}
+        {{- 'custom.css' | asset_url | stylesheet_tag: preload: true -}}
 
-    <link rel="preconnect" href="https://cdn.shopify.com">
-    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+        <link rel="preconnect" href="https://cdn.shopify.com">
+        <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
 
-    {%- unless settings.text_font.system? -%}
-        <link rel="preload" href="{{ settings.text_font | font_url }}" as="font" type="font/woff2" crossorigin>
-      {%- endunless -%}
-    {%- render 'css-variables' -%}
-    {{ content_for_header }}
-    
-    
-    
-    
-</head>
-<body>
-
-    {%- if request.page_type != 'cart'-%} 
-        {%  section 'cart-drawer' %}
-    {% endif %} 
-    {%  section 'annoucement-bar' %} 
-    {%  section 'header' %} 
-    {{ content_for_layout }}
-    {%  section 'footer' %} 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js"></script>
-    <script src=" https://cdn.jsdelivr.net/npm/url-parse@1.5.10/dist/url-parse.min.js "></script>    
-    {{ 'script.js' |  asset_url | script_tag }}
-</body>
+        {%- unless settings.text_font.system? -%}
+            <link rel="preload" href="{{ settings.text_font | font_url }}" as="font" type="font/woff2" crossorigin>
+        {%- endunless -%}
+        {%- render 'css-variables' -%}
+        {{ content_for_header }}
+    </head>
+    <body>
+        {%- if request.page_type != 'cart'-%} 
+            {%  section 'cart-drawer' %}
+        {% endif %} 
+        {%  section 'annoucement-bar' %} 
+        {%  section 'header' %} 
+        {{ content_for_layout }}
+        {%  section 'footer' %} 
+        {{ 'url-parse.min.js' |  asset_url | script_tag }}  
+        {{ 'lazysizes.min.js' |  asset_url | script_tag }} 
+        {{ 'script.js' |  asset_url | script_tag }}
+    </body>
 </html>

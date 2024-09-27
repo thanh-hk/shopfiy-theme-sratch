@@ -59,9 +59,6 @@
                 </div>             
             {% else %}
         <div class="{% if forloop.index == 1 %}operations__content--active{% endif %} operations__content transition-all operations__content--{{ forloop.index }} relative">
-            
-
-           
                 <div class="gap-4 justify-between mb-5 hidden md:flex items-center">
                     {% if section.settings.show_view_all %} 
                      <div><a class="underline">{{ 'collection.general.view_all' | t }}</a></div>
@@ -69,10 +66,8 @@
                     <div class="flex gap-4">
                         <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center ">{%- render 'icon' with 'chevron-left' -%}</button> 
                         <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center">{%- render 'icon' with 'chevron-right' -%}</button>
-                    </div> 
-                   
-                </div>
-            
+                    </div>                   
+                </div>            
             <div class="slides overflow-auto max-w-[100rem] h-[24rem] relative md:overflow-hidden scroll-smooth">
                 {% for i in (1..6) %}
                     <div class="slide absolute top-0 w-[46%] md:w-[--item-per-row] transition pr-3 {{ forloop.index | minus: 1}}" style="transform: translateX({{ forloop.index | minus: 1 | times: 100  }}%);">

@@ -1,0 +1,13 @@
+<div class="col-span-1 flex flex-col gap-2">
+    <div class="overflow-hidden md:h-[160px] xl:h-[250px]">
+        {%- render 'image', image:article.image.src -%} 
+    </div>
+    <h3 class="font-medium">{{ article.title | truncate: 50 | escape }}</h3>
+    {% if section.settings.show_date %}
+        <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
+    {% endif %}
+    {% if section.settings.show_author %}
+        <p>{{ article.author }}</p>
+    {% endif %}
+    <div>{{ article.excerpt | strip_html | truncatewords: 14  }}<a class="underline" href="{{ article.url }}">{{'blog.general.blog_read_more' | t }}</a></div>
+</div>
