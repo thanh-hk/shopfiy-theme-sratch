@@ -1,7 +1,7 @@
 
 {%  style  %}
     :root {    
-    --countdown-bg: {{ section.settings.countdown_bg }};
+        --countdown-bg: {{ section.settings.countdown_bg }};
     }
 {% endstyle %} 
 <div class="section-id-{{ section.id }} py-[--section-top_bottom_padding]">
@@ -17,19 +17,19 @@
              {% for block in section.blocks %}
                 {% case  block.type %}
                 {% when 'sub-heading' %}
-                    <div>{{ block.settings.sub_heading }}</div>
+                    <div {{ block.shopify_attributes }}>{{ block.settings.sub_heading }}</div>
                 {% when 'heading' %}
-                    <h2 class="text-3xl">{{ block.settings.heading}}</h2>
+                    <h2 class="text-3xl" {{ block.shopify_attributes }}>{{ block.settings.heading}}</h2>
                 {% when 'text' %}
-                    <div class="text-center">{{ block.settings.text }}</div>
+                    <div class="text-center" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
                 {% when 'countdown-timer' %}
-                    <div class="countdown-timer text-2xl md:text-5xl">
+                    <div class="countdown-timer text-2xl md:text-5xl" {{ block.shopify_attributes }}>
                         {%  assign  date =  block.settings.date %} 
-                        {%  assign  time =  block.settings.time %} 
+                        {%  assign  time =  block.settings.time %}                        
                         <div class="date hidden"> {{ date | append: ' ' | append: time }}</div>
                     </div>
                 {% when 'button' %}
-                    <div class="flex">
+                    <div class="flex" {{ block.shopify_attributes }}>
                         <a href="{{ block.settings.link }}" class="py-2 px-5 z-10 rounded-[--border-radius] flex  text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full">{{  block.settings.link_name }}</a>
                     </div>
                 {% endcase %}
@@ -55,45 +55,51 @@
                 "default": "#FFF"
             },
             {
-            "type": "select",
-            "id": "layout_align_horizontal",
-            "label": "Horizontal Layout",
-            "options": [
-                {
-                    "label": "Center",
-                    "value": "center"
-                },
-                {
-                    "label": "Right",
-                    "value": "end"
-                },
-                {
-                    "label": "Left",
+                "type": "select",
+                "id": "layout_align_horizontal",
+                "label": "Horizontal Layout",
+                "options": [
+                    {
+                        "label": "Center",
+                        "value": "center"
+                    },
+                    {
+                        "label": "Right",
+                        "value": "end"
+                    },
+                    {
+                        "label": "Left",
+                        "value": "start"
+                    }                           
+                ],
+                "default": "start"
+            },
+            {
+                "type": "select",
+                "id": "layout_align_vertical",
+                "label": "Vertical Layout",
+                "options": [
+                    {
+                        "label": "Center",
+                        "value": "center"
+                    },
+                    {
+                        "label": "Bottom",
+                        "value": "end"
+                    },
+                    {
+                    "label": "Top",
                     "value": "start"
-                }                           
-            ],
-            "default": "start"
-        },
-        {
-            "type": "select",
-            "id": "layout_align_vertical",
-            "label": "Vertical Layout",
-            "options": [
-                {
-                    "label": "Center",
-                    "value": "center"
-                },
-                {
-                    "label": "Bottom",
-                    "value": "end"
-                },
-                {
-                "label": "Top",
-                "value": "start"
-                }                           
-            ],
-            "default": "center"
-        }               
+                    }                           
+                ],
+                "default": "center"
+            },
+            {
+                "type": "text",
+                "id": "text_end",
+                "label": "Text end",
+                "default": "EXPIRED"                     
+            }                
         ],
         "blocks": [
             {
@@ -177,10 +183,10 @@
 
 <script>
 // Set the date we're counting down to
-var b = document.querySelector('.date').textContent;
-
-var countDownDate = new Date(b).getTime();
-
+var endingDate = document.querySelector('.date').textContent;
+var countDownDate = new Date(endingDate).getTime();
+var textEnd = '{{ section.settings.text_end }}';
+console.log(textEnd);
 setInterval(function() {
 
   // Get today's date and time
@@ -214,7 +220,7 @@ setInterval(function() {
   // If the count down is over, write some text 
   if (distance < 0) {
     clearInterval();
-    document.querySelector('.countdown-timer').innerHTML = "EXPIRED";
+    document.querySelector('.countdown-timer').innerHTML = textEnd;
   }
 }, 1000);
 
