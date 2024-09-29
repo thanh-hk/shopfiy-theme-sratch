@@ -195,6 +195,11 @@
         "id": "free_shipping_amounts",
         "label": "Amounts",
         "default": "300"
+      },
+      {
+        "type": "richtext",
+        "id" :"term_and_condition",
+        "label":"Term and contion"
       }
     ]
   }

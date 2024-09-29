@@ -1,6 +1,12 @@
 
 
 
+{%  style  %}
+    :root {    
+     --row_mobile_high: {{ section.settings.row_mobile_high }}px;
+     --row_desktop_high: {{ section.settings.row_desktop_high }}px;
+    }
+{% endstyle %} 
 <div class="section-id-{{ section.id }} md:py-[--section-top_bottom_padding]">
     <div class="container  mx-auto p-4 ">
         {% if section.settings.carousel_on_mobile %}
@@ -15,8 +21,8 @@
                             <div class="absolute top-0 left-0 w-full h-full before:absolute  before:w-full before:h-full before:bg-black before:bottom-0 before:left-0 before:right-0 before:top-0 before:opacity-20">
                                 {% if block.settings.box_image == blank %}
                                     {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full absolute top-0 left-0' -}}
-                                {% else %}  
-                                    {%- render 'image', image:block.settings.box_image -%}
+                                {% else %}      
+                                <img class="object-cover object-center w-full h-full" lazy-src="{{ block.settings.box_image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
                                 {% endif %}   
                             </div>
                             <div class="absolute text-[--text_on_ovelay] top-0 left-0 w-full h-full flex flex-col text-{{ block.settings.text_align}} items-{{ block.settings.layout_align_vertical }} justify-{{ block.settings.layout_align_horizontal }} p-5">              
@@ -45,7 +51,7 @@
                             {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full absolute top-0 left-0' -}}
                         </div>
                     {% else %}  
-                    {%- render 'image', image:block.settings.box_image -%}
+                    <img class="object-cover object-center w-full h-full" lazy-src="{{ block.settings.box_image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
                     {% endif %}   
                 </div>
                 <div class="media-item absolute text-[--text_on_ovelay] top-0 left-0 w-full h-full flex flex-col text-{{ block.settings.text_align}} items-{{ block.settings.layout_align_vertical }} justify-{{ block.settings.layout_align_horizontal }} p-5">              
@@ -245,9 +251,3 @@
 }
 {%  endschema  %}  
 
-{%  style  %}
-    :root {    
-     --row_mobile_high: {{ section.settings.row_mobile_high }}px;
-     --row_desktop_high: {{ section.settings.row_desktop_high }}px;
-    }
-{% endstyle %} 

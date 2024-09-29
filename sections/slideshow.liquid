@@ -7,41 +7,40 @@
 <div class="section-id-{{ section.id }}">
     <div class="slide-shows overflow-auto max-w-[200rem] h-[--slideshow_mobile_high] md:h-[--slideshow_desktop_high] relative md:overflow-hidden scroll-smooth">
         {% for block in section.blocks %}              
-            <div class="slide-show absolute top-0 w-[100%] transition-all pr-3  h-[--slideshow_mobile_high] md:h-[--slideshow_desktop_high]" {{ block.shopify_attributes }}>
-        
-            <div class="absolute top-0 left-0 w-full h-full {% if section.settings.show_over_lay %}before:absolute  before:w-full before:h-full before:bg-black before:bottom-0 before:left-0 before:right-0 before:top-0 before:opacity-30{% endif %}">
-                {% if block.settings.image == blank %}
-                    <div class="bg-[#f5f5f5] h-full">
-                        {%- capture current %}{% cycle 1, 2 %}{% endcapture -%}
-                    {{- 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
-                    </div>
-                {% else %}  
-                    <div class="hidden md:block h-full">
-                        {%- render 'image', image:block.settings.image -%}
-                    </div>
-                    <div class="md:hidden h-full">
-                        {%- render 'image', image:block.settings.image_mobile -%}   
-                    </div>               
-                {% endif %}
-            </div>
-            <div class="absolute top-0 left-0 w-full h-full">
-                <div class="container z-3 h-full mx-auto px-4  text-[--text_on_ovelay] absolute top-0 left-[50%] -translate-x-[50%] flex items-{{ section.settings.layout_align_vertical }} justify-{{ section.settings.layout_align_horizontal }}">           
-                    <div class="text-{{ section.settings.text_align}} max-w-[400px]">                    
-                        {% if block.settings.title != blank %}
-                            <h1 class="uppercase">{{ block.settings.title }}</h1>
-                        {% endif %}
-                        {% if block.settings.text != blank %}
-                            <div>{{ block.settings.text }}</div>
-                        {% endif %}
-                        {% if block.settings.link_name != blank %}
-                            <div class="flex {% if section.settings.text_align == 'right' %} justify-end  {% else %} justify-{{ section.settings.text_align}} {% endif %}">
-                                <a href="{{ block.settings.link }}" class="py-2 mt-4 px-5 z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full"> {{ block.settings.link_name }}</a>
-                            </div>                                           
-                        {% endif %}  
-                        </div>         
+            <div class="slide-show absolute top-0 w-[100%] transition-all pr-3  h-[--slideshow_mobile_high] md:h-[--slideshow_desktop_high]" {{ block.shopify_attributes }}>        
+                <div class="absolute top-0 left-0 w-full h-full {% if section.settings.show_over_lay %}before:absolute  before:w-full before:h-full before:bg-black before:bottom-0 before:left-0 before:right-0 before:top-0 before:opacity-30{% endif %}">
+                    {% if block.settings.image == blank %}
+                        <div class="bg-[#f5f5f5] h-full">
+                            {%- capture current %}{% cycle 1, 2 %}{% endcapture -%}
+                        {{- 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg h-full w-full ' -}}
+                        </div>
+                    {% else %}  
+                        <div class="hidden md:block h-full">
+                            <img class="object-cover object-center w-full h-full" lazy-src="{{ block.settings.image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
+                        </div>
+                        <div class="md:hidden h-full">
+                            <img class="object-cover object-center w-full h-full" lazy-src="{{ block.settings.image_mobile |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
+                        </div>               
+                    {% endif %}
                 </div>
-            </div>
-              
+                <div class="absolute top-0 left-0 w-full h-full">
+                    <div class="container z-3 h-full mx-auto px-4  text-[--text_on_ovelay] absolute top-0 left-[50%] -translate-x-[50%] flex items-{{ section.settings.layout_align_vertical }} justify-{{ section.settings.layout_align_horizontal }}">           
+                        <div class="text-{{ section.settings.text_align}} max-w-[400px]">                    
+                            {% if block.settings.title != blank %}
+                                <h1 class="uppercase">{{ block.settings.title }}</h1>
+                            {% endif %}
+                            {% if block.settings.text != blank %}
+                                <div>{{ block.settings.text }}</div>
+                            {% endif %}
+                            {% if block.settings.link_name != blank %}
+                                <div class="flex {% if section.settings.text_align == 'right' %} justify-end  {% else %} justify-{{ section.settings.text_align}} {% endif %}">
+                                    <a href="{{ block.settings.link }}" class="py-2 mt-4 px-5 z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full"> {{ block.settings.link_name }}</a>
+                                </div>                                           
+                            {% endif %}  
+                            </div>         
+                    </div>
+                </div>
+                
             </div>
         {% endfor %}
     <div class="container mx-auto p-4 flex justify-between items-center absolute bottom-0 left-[50%] -translate-x-[50%]">

@@ -51,8 +51,7 @@
                                         <div class="flex items-center gap-3">
                                             <div class="font-medium hidden md:block">{{ item.final_line_price | money}}</div>
                                             <a class="remove_item underline" href="{{ item.url_to_remove }}">{%- render 'icon' with 'trash' -%}</a>
-                                        </div>
-                                        
+                                        </div>                                       
                                     </div>                                                                      
                                 </div>                                                      
                         </div>
@@ -60,6 +59,13 @@
                 </div>
 
                 <footer class="p-4 border-t border-[--border-color]">
+                    {% if  settings.term_and_condition != blank %}
+                        <div class="flex gap-2 mb-3">
+                            <input type="checkbox" id="myCheck">
+                            <label for="myCheck" class="[&_a]:underline">{{ settings.term_and_condition }}</label> 
+                        </div>
+                        
+                    {% endif %}
                 {% if cart.total_discount > 0 %} 
                     <div class="flex justify-between mb-4">
                         <h3>{{ 'cart.general.cart_total_discount' | t }}</h3>
@@ -72,13 +78,24 @@
                 </div>
                 <button type="submit" name="checkout" class="py-4 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] w-full">Checkout</button> 
             </footer>
-                    
-            {% endif %}
+            {%  comment  %}   
+            <div class="relative">
+                <div class="overlay bg-gray-900/75 w-full h-full left-0 fixed top-0"></div>
+                <div class="flex flex-col items-center justify-center">
+                    <div>{{ settings.term_and_condition }}</div>
+                    <div class="flex gap-3">
+                        <button class="denie">Cancel</button>
+                        <button type="submit" name="checkout" class="py-4 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] w-full">Checkout</button> 
+                    </div>
+                </div>
+            </div>
+            {% endcomment %}
             
-        {% endform %}
-        
-       
-    </div>
+
+            </div>                    
+            {% endif %}           
+        {% endform %}  
+    </div>   
 </div>
 {% schema %}
     {
@@ -87,5 +104,21 @@
         "settings": []
     }
 {% endschema %}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+     var checkBox = document.getElementById("myCheck");
+     if(document.querySelector('[name="checkout"]')){
+        document.querySelector('[name="checkout"]').addEventListener('click', function(e){
+        if (checkBox.checked == true){
+              console.log("thanh");
+   }else {
+     e.preventDefault();
+  }
+        })
+     }
+     
+
+ 
+</script>
+
 

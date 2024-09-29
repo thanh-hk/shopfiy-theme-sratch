@@ -50,8 +50,7 @@
                             </div>
                         {% else %}  
                             <div class="transition-all group-hover:scale-[1.06]">
-                                {%- render 'image', image:block.settings.image -%}
-                                                          
+                                <img class="object-cover object-center w-full h-full" lazy-src="{{ block.settings.image | default: collection.featured_image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">                                                      
                             </div>
                         {% endif %} 
                     </div>

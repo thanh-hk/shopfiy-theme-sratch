@@ -3,7 +3,7 @@
   <div class="container gap-4 mx-auto px-4" >
           <div class="flex flex-col items-center">
               <h2 class="font-medium uppercase pb-6"> {{ 'products.product.related_product' | t }}</h2>
-              <div class="related-products grid-cols-2 grid md:grid-cols-6 gap-6"></div>
+              <div class="related-products grid-cols-2 grid md:grid-cols-6 gap-6" data-money-format="{{ shop.money_format }}"></div>
           </div>
   </div>
 </div>
@@ -35,8 +35,9 @@
 {%  endschema  %}
 
 <script>
+  const format = document.querySelector('[data-money-format]').getAttribute('data-money-format');
   function buildBlock(product){ 
-        const formattedPrice = formatMoney(product.price, "{{ shop.money_format }}")
+        const formattedPrice = formatMoney(product.price, format)
         const html = `
         <div>
         <a class="related-product flex flex-col" href="${product.url}">

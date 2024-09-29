@@ -1,0 +1,224 @@
+
+{%  style  %}
+    :root {    
+    --countdown-bg: {{ section.settings.countdown_bg }};
+    }
+{% endstyle %} 
+<div class="section-id-{{ section.id }} py-[--section-top_bottom_padding]">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+        {% if section.settings.image == blank %}
+            <div class="bg-[#f5f5f5] h-full">
+                {{- 'image' | placeholder_svg_tag: 'placeholder-svg h-full w-full transition-all group-hover:scale-[1.06]' -}}
+            </div>
+        {% else %} 
+            <img class="object-cover object-center w-full h-full" lazy-src="{{ section.settings.image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
+        {% endif %}
+        <div class="flex flex-col gap-2 p-8 items-{{ section.settings.layout_align_horizontal }} justify-{{ section.settings.layout_align_vertical }} bg-[--countdown-bg]">
+             {% for block in section.blocks %}
+                {% case  block.type %}
+                {% when 'sub-heading' %}
+                    <div>{{ block.settings.sub_heading }}</div>
+                {% when 'heading' %}
+                    <h2 class="text-3xl">{{ block.settings.heading}}</h2>
+                {% when 'text' %}
+                    <div class="text-center">{{ block.settings.text }}</div>
+                {% when 'countdown-timer' %}
+                    <div class="countdown-timer text-2xl md:text-5xl">
+                        {%  assign  date =  block.settings.date %} 
+                        {%  assign  time =  block.settings.time %} 
+                        <div class="date hidden"> {{ date | append: ' ' | append: time }}</div>
+                    </div>
+                {% when 'button' %}
+                    <div class="flex">
+                        <a href="{{ block.settings.link }}" class="py-2 px-5 z-10 rounded-[--border-radius] flex  text-white bg-[--primary-color] relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full">{{  block.settings.link_name }}</a>
+                    </div>
+                {% endcase %}
+             {% endfor %}  
+        </div>
+    </div>
+  </div>
+  {%  schema  %}  
+    {
+        "name" :"Coutdown Timer",
+        "class" :"countdown",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+                "info": "280 x 80px .png recommended"  
+            },
+            {
+                "type": "color",
+                "id":"countdown_bg",
+                "label":"Countdown background",
+                "default": "#FFF"
+            },
+            {
+            "type": "select",
+            "id": "layout_align_horizontal",
+            "label": "Horizontal Layout",
+            "options": [
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Right",
+                    "value": "end"
+                },
+                {
+                    "label": "Left",
+                    "value": "start"
+                }                           
+            ],
+            "default": "start"
+        },
+        {
+            "type": "select",
+            "id": "layout_align_vertical",
+            "label": "Vertical Layout",
+            "options": [
+                {
+                    "label": "Center",
+                    "value": "center"
+                },
+                {
+                    "label": "Bottom",
+                    "value": "end"
+                },
+                {
+                "label": "Top",
+                "value": "start"
+                }                           
+            ],
+            "default": "center"
+        }               
+        ],
+        "blocks": [
+            {
+                "type":"sub-heading",
+                "name":"Sub heading",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "sub_heading",
+                        "label": "Sub heading",
+                        "default": "Sub heading"  
+                    }                                     
+                ]
+            },
+            {
+                "type":"heading",
+                "name":"Heading",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading",
+                        "default": "Countdown timer"  
+                    }
+                ]
+            },
+            {
+                "type":"text",
+                "name":"Text",
+                "settings": [
+                    {
+                        "type": "richtext",
+                        "id": "text",
+                        "label": "Text",
+                        "default": "<p>Create urgency around an offer or event using a countdown timer.</p>"  
+                    }
+                ]
+            },          
+            {
+                "type":"countdown-timer",
+                "name":"Countdown timer",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "date",
+                        "label": "Date",
+                        "info": "Ex: Sep 14, 2024"  
+                    },
+                    {
+                        "type": "text",
+                        "id": "time",
+                        "label": "Time",
+                        "info": "Format: 17:00 (24 hour clock). Uses the store's timezone."  
+                    }
+                ]
+            },
+            {
+                "type": "button",
+                "name": "Button",
+                "settings": [
+                    {   
+                        "type": "url",
+                        "id":"link",
+                        "label":"Link"
+                    },
+                    {   
+                        "type": "text",
+                        "id":"link_name",
+                        "label":"Link name"
+                    }
+                ]          
+        }
+        ],
+        "presets": [
+            {
+                "name":"Coutdown Timer"
+            }
+        ]
+    }
+{%  endschema  %}  
+
+<script>
+// Set the date we're counting down to
+var b = document.querySelector('.date').textContent;
+
+var countDownDate = new Date(b).getTime();
+
+setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  if( days < 10 ){
+    days = ("0" + days).slice(-2);
+  }
+  if( hours < 10 ){
+    hours = ("0" + seconds).slice(-2);
+  }
+  if( minutes < 10 ){
+    minutes = ("0" + seconds).slice(-2);
+  }
+  if(seconds < 10 ){
+    seconds = ("0" + seconds).slice(-2);
+  }
+  
+  // Output the result in an element with id="demo"
+  document.querySelector('.countdown-timer').innerHTML = days + ": " + hours + ": "
+  + minutes + ": " + seconds;
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval();
+    document.querySelector('.countdown-timer').innerHTML = "EXPIRED";
+  }
+}, 1000);
+
+
+</script>
+
+

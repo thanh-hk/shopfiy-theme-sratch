@@ -42,38 +42,34 @@ var formatMoney = function(cents, format) {
 
   return formatString.replace(placeholderRegex, value);
 };
-
-
 /*  Lazy loading images */
 
 
- const loadImage = function(img) {
-    const url = img.getAttribute('lazy-src')
-    img.setAttribute('src', url);
-  }
-  function ready(){
-    if('IntersectionObserver' in window){
-      var lazyImgs = document.querySelectorAll('img[lazy-src]');
-      
-      let observer = new IntersectionObserver((entries) =>{
-        entries.forEach(entry => {
-          if (entry.isIntersecting){
-            loadImage(entry.target);
-          }
-        })
-  
-      });
-       lazyImgs.forEach( img => {
-           observer.observe(img);
-       })
-    }else {
-  
-    }
-  };
-  document.addEventListener('DOMContentLoaded', ready);
-  
- 
+const loadImage = function(img) {
+  const url = img.getAttribute('lazy-src')
+  img.setAttribute('src', url);
+}
+function ready(){
+  if('IntersectionObserver' in window){
+    var lazyImgs = document.querySelectorAll('img[lazy-src]');
+    
+    let observer = new IntersectionObserver((entries) =>{
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          loadImage(entry.target);
+        }
+      })
 
+    });
+     lazyImgs.forEach( img => {
+         observer.observe(img);
+     })
+  }else {
+
+  }
+};
+document.addEventListener('shopify:section:load', ready);
+document.addEventListener('DOMContentLoaded', ready);
 
 /* Filter */
 const filterButton = document.querySelector('.filter-button-mobile');
@@ -98,8 +94,15 @@ document.querySelectorAll('.filter-mobile-overlay, .close-button').forEach (butt
 function openDrawer() {
   if (document.querySelector('.drawer')){
     document.querySelector('.drawer').classList.add('drawer--active');  
-  }
-  
+  } 
+}
+
+function closeDrawer(){
+  document.querySelectorAll('.cart-drawer, .cart-drawer-close').forEach(item =>{
+    item.addEventListener('click',()=>{
+      document.querySelector('.cart-drawer').classList.remove('drawer--active');
+    })
+  })
 }
 
 async function updateCartDrawer(){
@@ -135,13 +138,9 @@ function addCartDrawerListner(){
        
      } else {
         var newQuantity = currentQuantity -1;
-        inputItem.value = newQuantity;
-        
+        inputItem.value = newQuantity;        
      }
-
-     console.log({key, currentQuantity, newQuantity});
-     
-  
+     console.log({key, currentQuantity, newQuantity});       
       //ajax update
       const res = await fetch('/cart/update/js', {
         method:"post",
@@ -153,11 +152,9 @@ function addCartDrawerListner(){
       });
       const cart = await res.json();
       updateCartCountItem(cart.item_count);
-      updateCartDrawer();
-      
+      updateCartDrawer();      
     })
   });
-
   
   document.querySelectorAll('.cart-drawer-item .remove_item').forEach (remove => {
     remove.addEventListener('click',(e)=>{
@@ -191,12 +188,12 @@ function addCartDrawerListner(){
     })
   });
 
+  closeDrawer();
    if (document.querySelector('.drawer-box')){
     document.querySelector('.drawer-box').addEventListener('click',(e)=> {
       e.stopPropagation(); 
     });
    }
- 
 }
 
 document.querySelectorAll('form[action="/cart/add"').forEach(form =>{
@@ -221,19 +218,6 @@ document.querySelectorAll('form[action="/cart/add"').forEach(form =>{
 });
 
 addCartDrawerListner();
-
-if(document.querySelector('.cart-drawer')){
-  document.querySelector('.cart-drawer').addEventListener('click',()=>{
-    document.querySelector('.cart-drawer').classList.remove('drawer--active')
-  });
-  
-}
-if(document.querySelector('.cart-drawer-close')){
-  document.querySelector('.cart-drawer-close').addEventListener('click',()=>{
-    document.querySelector('.cart-drawer-close').closest('.cart-drawer').classList.remove('drawer--active')
-  });
-}
-
 
 document.querySelectorAll('a[href="/cart"]').forEach( a => {
   a.addEventListener('click',(e)=>{
@@ -287,9 +271,6 @@ const nextSlide = function () {
  
 });
 };
-
-
-
 
 /* tab */
 const tabs = document.querySelectorAll('.operations__tab');

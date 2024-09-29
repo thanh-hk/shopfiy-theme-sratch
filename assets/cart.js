@@ -15,12 +15,8 @@ document.querySelectorAll('.cart-item-selector button').forEach(button =>{
            
          } else if ( value > 1) {
             const newValue = value -1;
-            input.value = newValue;
-           
-
-            
-            changeItemQuanity(keyItem, newValue);
-            
+            input.value = newValue;                     
+            changeItemQuanity(keyItem, newValue);           
          }        
     })
 });
@@ -45,9 +41,9 @@ document.querySelector('[name="note"]').addEventListener('keyup', debounce((e)=>
     axios.post('/cart/update.js', {
         note: e.target.value,
     });
-
 },500)
-)
+);
+
 function changeItemQuanity(key, quantity){   
     axios.post('/cart/change.js',{
         id: key,

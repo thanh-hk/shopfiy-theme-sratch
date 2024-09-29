@@ -8,8 +8,7 @@
                 {% if product.selected_or_first_available_variant.featured_image %}
                     {%  assign  featured =  product.selected_or_first_available_variant.featured_image %} 
                     <div class="{% if section.settings.show_zoom %}big-img relative overflow-hidden cursor-zoom-in {% endif %}border border-[--border-color] px-[4rem] xl:px-[16rem] md:px-[10rem] py-8">
-                        <img class="product-image {% if section.settings.show_zoom %}display-img {% endif %} w-full  object-contain " lazy-src="{{ featured |  image_url  }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" srcset="">
-                            
+                        <img class="product-image {% if section.settings.show_zoom %}display-img {% endif %} w-full  object-contain " lazy-src="{{ featured |  image_url  }}" alt="{{ product.title }}" src="{{  '1x1.jpg' |  asset_url }}">                            
                     </div>   
                 {% else %}
                     {%  assign  featured =  product.featured_image %} 
@@ -21,7 +20,7 @@
                     <div class="flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
                         <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
-                            {%- render 'image', image:image -%}                        
+                            <img class="object-center object-contain h-full " lazy-src="{{ image |  image_url }}"  alt="{{ product.title }}" src="{{  '1x1.jpg' |  asset_url }}"/>                       
                         </div>               
                         {% endfor %}
                     </div>
@@ -29,14 +28,14 @@
                     <div class="hidden md:grid grid-cols-4 gap-4 mt-4">
                         {% for image in product.images offset: 1%}               
                             <div class="col-span-2 border border-[--border-color] flex justify-center items-center p-8 [&:nth-child(3)]:col-span-1 [&:nth-child(3)]:p-4 [&:nth-child(4)]:col-span-3 [&:nth-child(4)]:p-0 [&:nth-child(5)]:col-span-4 [&:nth-child(5)]:p-0  xl:px-24 md:px-[5rem]">                              
-                                {%- render 'image', image:image -%} 
+                                <img class="object-center object-contain h-full " lazy-src="{{ image |  image_url }}" alt="{{ product.title }}" src="{{  '1x1.jpg' |  asset_url }}"/>
                             </div>               
                         {% endfor %}
                     </div>
                     <div class="md:hidden flex gap-2 md:gap-4 mt-4 product-image-thumbs flex-wrap">
                         {% for image in product.images %}               
                             <div class="w-[100px] overflow-hidden border border-[--border-color] flex justify-center h-[68px] p-2 {% if image == featured %} selected {% endif %}">
-                                <img class="object-center object-cover h-full " lazy-src="{{ image |  image_url: master }}" src="{{  '1x1.jpg' |  asset_url }}" alt="{{ product.title }}" /> 
+                                <img class="object-center object-contain h-full " lazy-src="{{ image |  image_url }}"  alt="{{ product.title }}" src="{{  '1x1.jpg' |  asset_url }}" /> 
                             </div>               
                         {% endfor %}
                     </div>
@@ -46,7 +45,7 @@
                 {% for block in section.blocks %}
                     {% case block.type %}
                         {% when 'product-sku' %}
-                            <div class="product-sku text-[--light-gray--color] text-sm" {{ block.shopify_attributes }}>{{ current_variant.sku }}</div>
+                            <div class="product-sku text-[--light-gray--color] text-sm" {{ block.shopify_attributes }}>{{ current_variant.sku }}</div> 
                         {% when 'product-title' %}
                             <h1 class="text-2xl" {{ block.shopify_attributes }}>{{ product.title }}</h1>
                         {% when 'product-vendor' %}
@@ -121,6 +120,7 @@
                             {% for variant in product.variants %}
                                 <div class="hidden" InventoryManagment data-id="{{variant.id}}" data-inventory="{{variant.inventory_quantity}}" >{{ variant.inventory_quantity}}</div>
                             {% endfor %}
+
                         {% when 'buy-button' %}
                             <div {{ block.shopify_attributes }}>
                             {% form 'product', product, class:'shopify-product-form'  %} 
@@ -339,7 +339,8 @@
     var buyItNowText = "{{- 'products.product.buy_it_now' | t -}}";
     var soldOutText = "{{- 'products.product.sold_out' | t -}}";
     var outOfStock = "{{  'products.product.inventory_out_stock' | t }}"
-    /*Get variant ID on select type 
+
+    /*Get variant ID on select type  */
     if (document.querySelector('select[name="id"]')){
         document.querySelector('select[name="id"]').addEventListener('change', (e) => {
             var selectElement = event.target;
@@ -347,8 +348,24 @@
         document.querySelector('#product-id').value = value;
         let matchedVariant = product.variants.find(variant => variant.id == value);           
         var url = new URLParse(window.location.href, true);  
-            url.query.variant = matchedVariant.id;
-            window.history.replaceState(null, null, url.toString()); 
+        url.query.variant = matchedVariant.id;
+        window.history.replaceState(null, null, url.toString()); 
+
+         //change variant inventory quantity
+         let inventoryHash = document.querySelectorAll('[inventorymanagment]'); 
+            Array.from(inventoryHash).forEach(selectedVariant => {
+                const selectedVariantId = Number(selectedVariant.dataset.id)
+                if (selectedVariantId === matchedVariant.id){   
+                    if (selectedVariant.dataset.inventory > 0){
+                        document.querySelector('.unavailable_dot').classList.add('hidden');
+                        document.querySelector('.available_dot').classList.remove('hidden');
+                    } else{
+                        document.querySelector('.available_dot').classList.add('hidden');
+                        document.querySelector('.unavailable_dot').classList.remove('hidden');
+                    }            
+                    document.querySelector('.inventory_quantity').textContent = selectedVariant.dataset.inventory;                                       
+                }             
+            })
             
          //change price
          document.querySelector('.product-price').textContent = formatMoney(matchedVariant.price," {{ shop.money_format }}");
@@ -356,7 +373,7 @@
 
             if (matchedVariant.compare_at_price > matchedVariant.price){
                 var saving = (((matchedVariant.compare_at_price - matchedVariant.price) / matchedVariant.compare_at_price) * 100).toFixed(0);
-                document.querySelector('.saving-label').textContent = "save" + saving + "%";
+                document.querySelector('.saving-label').textContent = "Save " + saving + "%";
                 document.querySelector('.product-compare-price').classList.remove('hidden');
             } else {
                 document.querySelector('.product-compare-price').classList.add('hidden');
@@ -364,21 +381,21 @@
 
         //change add to cart button
         var add = document.querySelector('#add-to-cart');
-            var buy = document.querySelector('#buy-it-now');
-            if( matchedVariant.available ) {
-                add.textContent = addToCartText
-                add.disabled = false;
-                buy.textContent = buyItNowText
-                buy.disabled = false;
-                buy.style.display = "block";
-                document.querySelector('.saving-label').classList.add('hidden'); 
-            }else{
-                add.textContent = soldOutText
-                add.disabled = true; 
-                buy.style.display = "none";
-                buy.disabled = true;
-                document.querySelector('.saving-label').classList.remove('hidden'); 
-            }
+        var buy = document.querySelector('#buy-it-now');
+        if( matchedVariant.available ) {
+            add.textContent = addToCartText
+            add.disabled = false;
+            buy.textContent = buyItNowText
+            buy.disabled = false;
+            buy.style.display = "block";
+            document.querySelector('.sold-out-label').classList.add('hidden');
+        }else{
+            add.textContent = soldOutText
+            add.disabled = true; 
+            buy.style.display = "none";
+            buy.disabled = true;
+            document.querySelector('.sold-out-label').classList.remove('hidden');  
+        }
 
         //change product image
         document.querySelector('.product-image').setAttribute('src', matchedVariant.featured_image.src);
@@ -389,7 +406,7 @@
 
     });
     }
-    */
+   
     /*Get variant ID ID on block format */
     document.querySelectorAll('.product-option input[type="radio"]').forEach (radio => { 
         radio.addEventListener('change', ()=> {
@@ -420,6 +437,8 @@
            //change url
             var url = new URLParse(window.location.href, true);              
             url.query.variant = matchedVariant.id;
+
+             //change variant inventory quantity
             let inventoryHash = document.querySelectorAll('[inventorymanagment]'); 
             Array.from(inventoryHash).forEach(selectedVariant => {
                 const selectedVariantId = Number(selectedVariant.dataset.id)
@@ -460,7 +479,7 @@
                 document.querySelectorAll('.product-image-thumbs div')[matchedVariant.featured_image.position - 1].classList.add('selected');
             }
 
-           //change add to cart button
+            //change add to cart button
             var add = document.querySelector('#add-to-cart');
             var buy = document.querySelector('#buy-it-now');
             if( matchedVariant.available ) {
@@ -517,7 +536,7 @@
      //image zoom
     var showZoom = {{ section.settings.show_zoom }};
     if (showZoom){
-        const zoom = document.querySelector('.big-img').querySelector('.display-img').getAttribute('lazy-src');
+        const zoom = document.querySelector('.big-img').querySelector('.display-img').getAttribute('src');
         const image = document.createElement('img');
         image.classList.add('zoom', 'absolute', 'bg-white', 'opacity-0');
         image.setAttribute('src',zoom);

@@ -15,7 +15,6 @@
     .section-id-{{ section.id }} .hotspot_image_bg{
         --hotspot_row_mobile_high: {{ section.settings.hotspot_row_mobile_high }}px;
         --hotspot_row_desktop_high: {{ section.settings.hotspot_row_desktop_high }}px;
-
     }
 
 {% endstyle %}
@@ -30,15 +29,12 @@
                     </div>
                 {% else %}
                 <div class="{% if section.settings.image_mobile %} hidden md:block {% endif %} h-full w-full">
-                    {%- render 'image', image:section.settings.image -%}
-                </div>
-               
-                   
+                    <img class="object-cover object-center w-full h-full" lazy-src="{{ section.settings.image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
+                </div>                                  
                     {% if section.settings.image_mobile %}
                         <div class="md:hidden h-full w-full">
-                            {%- render 'image', image:section.settings.image_mobile -%}
-                        </div>
-                     
+                            <img class="object-cover object-center w-full h-full" lazy-src="{{ section.settings.image_mobile |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">
+                        </div>                    
                     {% endif %}
                 {% endif %}
             </div>

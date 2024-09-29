@@ -14,12 +14,12 @@
             </div> 
             <div class="overflow-hidden">
                 <div class="transition-all {% if section.settings.show-second-image %}{% if product.images.size > 1 %} group-hover:hidden {% endif %}{% endif %}">
-                    {%- render 'image', image:product.featured_image -%} 
+                    <img class="object-cover object-center w-full h-full" lazy-src="{{ product.featured_image |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">  
                 </div>
                 {% if section.settings.show-second-image %}  
                     <div class="hidden transition-all group-hover:block">
-                        {% if product.images.size > 1 %}                         
-                            {%- render 'image', image:product.images[1] -%} 
+                        {% if product.images.size > 1 %}  
+                            <img class="object-cover object-center w-full h-full" lazy-src="{{ product.images[1] |  image_url }}"  src="{{  '1x1.jpg' |  asset_url }}">                         
                         {% endif %}
                     </div>
                 {% endif %}
@@ -27,8 +27,7 @@
         </div>  
             <div class="flex flex-col gap-2">
                 <div class="hover:underline text-sm">{{- product.title | escape}}</div>
-                <div class=" flex gap-4 items-center"> 
-                                      
+                <div class=" flex gap-4 items-center">                                       
                     <div class="product-price font-medium text-xl">{{ price | money}}</div> 
                     <div class="product-compare-price text-[--border-color] text-sm line-through
                     {% unless compare-price > price %} hidden {% endunless %}" >{{compare-price  | money  }}</div>  
@@ -48,7 +47,7 @@
                 {% endfor %} 
             </select> 
             <button {% unless product.selected_or_first_available_variant.available %} disabled {% endunless  %}type="submit" name="add to cart" 
-                class="w-full p-2 overflow-hidden z-10 rounded-[--border-radius] flex justify-center items-center text-white bg-[--primary-color] mt-3 relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full" id="add-to-cart">
+                class="w-full p-2 overflow-hidden z-10 rounded-[--border-radius] flex text-sm justify-center items-center text-white bg-[--primary-color] mt-3 relative after:absolute  after:h-full after:bg-[--bg-button-on-hover] after:-z-10 after:transition-all after:w-0 after:bottom-0 after:left-0 hover:after:w-full" id="add-to-cart">
                     {% if product.selected_or_first_available_variant.available %}
                         {{- 'products.product.add_to_cart' | t -}}
                     {% else %}

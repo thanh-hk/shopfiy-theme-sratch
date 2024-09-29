@@ -91,7 +91,7 @@
 {%  endschema  %}
 
 <script>
-    const accouncementSlide = function() {
+    function accouncementSlide(){
         const annoucementBars = document.querySelectorAll('.announcement');
         let curAnnoucement = 0;
         const maxAnnoucement = annoucementBars.length;
@@ -114,10 +114,9 @@
         goToAnnoucementBar(curAnnoucement);
     }, 3000)
     }
+   
 
-    document.addEventListener('shopify:section:load', function() {
-    accouncementSlide();
-    });
+    document.addEventListener('shopify:section:load', accouncementSlide);
 
     document.addEventListener('DOMContentLoaded', accouncementSlide);
 </script>
