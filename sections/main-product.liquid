@@ -66,7 +66,7 @@
                                 <span class="{% if product.selected_or_first_available_variant.available %} hidden {% endif %} sold-out-label bg-[--sale-label-bg] text-[--sale-label-text] text-xs md:text-sm px-4 py-2 rounded-[--border-radius]"> {{- 'products.labels.sold_out_label' | t -}}</span> 
                                 {% endif %}                                     
                             </div>                                  
-                        {% when 'variant' %}
+                        {% when 'variant' %} 
                             <div {{ block.shopify_attributes }}>
                                 {% if block.settings.variant_picker_type == 'dropdown' %}
                                     <select name="id" class=" {% if product.has_only_default_variant %} opacity-0{% endif %} border border-[--border-color]  p-4">                   
@@ -76,7 +76,7 @@
                                     </select>                        
                                 {% else %}
                                     {% if product.variants.size > 1 %}
-                                        <div class="product-option">
+                                        <div class="product-option">                                                                                   
                                             {% for option in product.options_with_values %}
                                                 <fieldset class="mb-5">
                                                     <legend class="mb-3">{{ option.name }}</legend>
@@ -174,20 +174,20 @@
                         {% when 'pair-with' %}
                             <div class="flex flex-col mt-5" {{ block.shopify_attributes }}>
                                 {%- assign metafield_parts = block.settings.items_value_metafield | split: '.' -%}
-                                    {%- assign metafield_namespace = metafield_parts | first -%}
-                                    {%- assign metafield_key = metafield_parts | last -%}
-                                    {%- assign product_metafield = product.metafields[metafield_namespace][metafield_key].value -%}
-                                    {%- if product_metafield != blank -%}
-                                        <div class="flex justify-between items-center mb-4">
-                                            <h2>{{ block.settings.title }}</h2>
-                                            <div class="gap-2 hidden md:flex">
-                                                <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-left' -%}</button> 
-                                                <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-right' -%}</button>
-                                            </div>
-                                        </div>                                
-                                <div class="slides overflow-auto max-w-[100rem] h-[18rem] md:h-[21rem] relative md:overflow-hidden scroll-smooth">
+                                {%- assign metafield_namespace = metafield_parts | first -%}
+                                {%- assign metafield_key = metafield_parts | last -%}
+                                {%- assign product_metafield = product.metafields[metafield_namespace][metafield_key].value -%}
+                                {%- if product_metafield != blank -%}
+                                <div class="flex justify-between items-center mb-4">
+                                    <h2>{{ block.settings.title }}</h2>
+                                    <div class="gap-2 hidden md:flex">
+                                        <button class="slider__btn--left cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-left' -%}</button> 
+                                        <button class="slider__btn--right cursor-pointer w-8 h-8 flex justify-center items-center border rounded-full border-[--border-color]">{%- render 'icon' with 'chevron-right' -%}</button>
+                                    </div>
+                                </div>                                
+                                <div class="slides overflow-auto max-w-[100rem] h-[22rem] md:h-[18rem] relative md:overflow-hidden scroll-smooth">
                                     {% for product in product_metafield %}
-                                    <div class="slide absolute top-0 w-[46%] md:w-[33.33%] transition pr-3">
+                                    <div class="slide absolute top-0 w-[80%] md:w-[33.33%] transition pr-3">
                                         {%- render 'product-grid', product: product -%}
                                     </div>                                
                                     {%- endfor -%}                                                                                      
@@ -210,7 +210,7 @@
             {
                 "type": "checkbox",
                 "id":"show-quick-buy",
-                "label": "Show quick buy",
+                "label": "Show quick buy in 'Pair with' ",
                 "default": true
             },
             {
@@ -343,8 +343,8 @@
     /*Get variant ID on select type  */
     if (document.querySelector('select[name="id"]')){
         document.querySelector('select[name="id"]').addEventListener('change', (e) => {
-            var selectElement = event.target;
-            var value = Number(selectElement.value);
+        var selectElement = event.target;
+        var value = Number(selectElement.value);
         document.querySelector('#product-id').value = value;
         let matchedVariant = product.variants.find(variant => variant.id == value);           
         var url = new URLParse(window.location.href, true);  
@@ -532,18 +532,7 @@
         }     
     });
     }    
-
-     //image zoom
-    var showZoom = {{ section.settings.show_zoom }};
-    if (showZoom){
-        const zoom = document.querySelector('.big-img').querySelector('.display-img').getAttribute('src');
-        const image = document.createElement('img');
-        image.classList.add('zoom', 'absolute', 'bg-white', 'opacity-0');
-        image.setAttribute('src',zoom);
-        document.querySelector('.big-img').appendChild(image);
-    }
-    
-
+     
     //img show on thubmails click
     document.querySelectorAll('.product-image-thumbs div').forEach( div => {
         div.addEventListener('click', ()=>{
@@ -555,6 +544,16 @@
             }                        
         })
     });  
+
+      //image zoom
+      var showZoom = {{ section.settings.show_zoom }};
+    if (showZoom){
+        const zoom = document.querySelector('.big-img').querySelector('.display-img').getAttribute('lazy-src');
+        const image = document.createElement('img');
+        image.classList.add('zoom', 'absolute', 'bg-white', 'opacity-0');
+        image.setAttribute('src',zoom);
+        document.querySelector('.big-img').appendChild(image);
+    }
 
     if (showZoom){
         document.querySelectorAll('.big-img').forEach(bigImage => {

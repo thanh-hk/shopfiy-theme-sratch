@@ -27,6 +27,7 @@
                         {%  assign  date =  block.settings.date %} 
                         {%  assign  time =  block.settings.time %}                        
                         <div class="date hidden"> {{ date | append: ' ' | append: time }}</div>
+                        <p id="demo"></p>
                     </div>
                 {% when 'button' %}
                     <div class="flex" {{ block.shopify_attributes }}>
@@ -186,9 +187,8 @@
 var endingDate = document.querySelector('.date').textContent;
 var countDownDate = new Date(endingDate).getTime();
 var textEnd = '{{ section.settings.text_end }}';
-console.log(textEnd);
-setInterval(function() {
 
+setInterval(function() {
   // Get today's date and time
   var now = new Date().getTime();
     
@@ -200,22 +200,22 @@ setInterval(function() {
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+ 
   if( days < 10 ){
     days = ("0" + days).slice(-2);
   }
   if( hours < 10 ){
-    hours = ("0" + seconds).slice(-2);
+    hours = ("0" + hours).slice(-2);
   }
   if( minutes < 10 ){
-    minutes = ("0" + seconds).slice(-2);
+    minutes = ("0" + minutes).slice(-2);
   }
   if(seconds < 10 ){
     seconds = ("0" + seconds).slice(-2);
   }
-  
   // Output the result in an element with id="demo"
-  document.querySelector('.countdown-timer').innerHTML = days + ": " + hours + ": "
-  + minutes + ": " + seconds;
+  document.getElementById("demo").innerHTML = days + ": " + hours + ": "
+  + minutes + ": " + seconds ;
     
   // If the count down is over, write some text 
   if (distance < 0) {

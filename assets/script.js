@@ -227,7 +227,7 @@ document.querySelectorAll('a[href="/cart"]').forEach( a => {
 })
 
 /* Slide */
-const slider = function () {
+function slider () {
   const sliders = document.querySelectorAll('.slides').forEach(slider => {      
   const slides = slider.querySelectorAll('.slide');
   const btnLeft = slider.parentElement.querySelector('.slider__btn--left');
@@ -242,7 +242,6 @@ const slider = function () {
 
   };
   goToSlide(0);
- 
  // Next slide
 const nextSlide = function () {
   if (curSlide === maxSlide - 1) {
@@ -267,11 +266,13 @@ const nextSlide = function () {
  if( btnRight || btnLeft ){
  btnRight.addEventListener('click', nextSlide);
   btnLeft.addEventListener('click', prevSlide); 
- }
- 
+ } 
 });
 };
 
+document.addEventListener('shopify:section:load', slider);
+document.addEventListener('DOMContentLoaded', slider);
+slider();
 /* tab */
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
@@ -297,7 +298,7 @@ if(tabsContainer) {
   });
 }
 
-slider();
+
 
 /* filter arrow rotate */
 document.querySelectorAll('details').forEach(detail => {
