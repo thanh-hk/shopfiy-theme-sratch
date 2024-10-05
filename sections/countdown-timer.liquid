@@ -27,7 +27,7 @@
                         {%  assign  date =  block.settings.date %} 
                         {%  assign  time =  block.settings.time %}                        
                         <div class="date hidden"> {{ date | append: ' ' | append: time }}</div>
-                        <p id="demo"></p>
+                        <p id="countdown-timer"></p>
                     </div>
                 {% when 'button' %}
                     <div class="flex" {{ block.shopify_attributes }}>
@@ -214,7 +214,7 @@ setInterval(function() {
     seconds = ("0" + seconds).slice(-2);
   }
   // Output the result in an element with id="demo"
-  document.getElementById("demo").innerHTML = days + ": " + hours + ": "
+  document.getElementById("countdown-timer").innerHTML = days + ": " + hours + ": "
   + minutes + ": " + seconds ;
     
   // If the count down is over, write some text 
